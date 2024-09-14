@@ -21,59 +21,90 @@ internal static class Program
         var excelFiles = Directory.GetFiles(resourcesDirectory, "*.xlsx", SearchOption.AllDirectories);
         
         
-        var filePath = "207ис.xlsx";  // Замените на путь к вашему файлу
+        var filePath = excelFiles.First();  
 
         var notifyItems = new List<NotifyItem>();
-
-        // Чтение файла Excel
+        
         using (var package = new ExcelPackage(new FileInfo(filePath)))
         {
-            var worksheet = package.Workbook.Worksheets[0]; 
+            var worksheet = package.Workbook.Worksheets.First();
 
-            
-            for (var row = 2; row <= worksheet.Dimension.End.Row; row++)
+            var disciplines = new Dictionary<string, List<string>>();
+
+            var headerRow = 11;
+            var subHeaderRow = 12;
+
+            var lastAttestationType = "";
+
+            for (int col = 4; col <= worksheet.Dimension.End.Column; col++)
+            {
+                var attestationType = worksheet.Cells[headerRow, col].Text;
+                if (!string.IsNullOrEmpty(attestationType))
+                {
+                    lastAttestationType = attestationType;
+                }
+                var disciplineName = worksheet.Cells[subHeaderRow, col].Text;  // Название дисциплины
+
+                if (!string.IsNullOrWhiteSpace(disciplineName))
+                {
+                    if (!disciplines.ContainsKey(lastAttestationType))
+                    {
+                        disciplines[lastAttestationType] = [];
+                    }
+                    disciplines[lastAttestationType].Add(disciplineName);
+                }
+            }
+            var listOfDisciplines = disciplines.Values.SelectMany(x => x).ToList();
+
+            for (var row = 13; row <= worksheet.Dimension.End.Row; row++)
             {
                 var fio = worksheet.Cells[row, 2].Text; // Предположим, что ФИО в первой колонке
-                var disciplineName = worksheet.Cells[row, 2].Text; // Предположим, что дисциплина во второй колонке
-                var typeControl = worksheet.Cells[row, 3].Text; // Тип контроля (зачет/экзамен)
-                var controlResult = worksheet.Cells[row, 4].Text; // Результат контроля (оценка)
-
-                // Проверяем оценку (если оценка ниже 3 или неявка)
-                if (int.TryParse(controlResult, out int grade) && grade < 3 || controlResult.ToLower() == "неявка")
+                for (var col = 4; worksheet.Cells[row,col].Value != null; col++)
                 {
-                    // Ищем существующий объект NotifyItem для этого студента
-                    var notifyItem = notifyItems.Find(item => item.FIO == fio);
-
-                    if (notifyItem == null)
+                    var disciplineName = listOfDisciplines[col-4];
+                    var attestationType = FindAttestationTypeByDiscipline(disciplines, disciplineName);
+                    var controlResult = worksheet.Cells[row, col].Text;
+                    
+                    // Проверяем оценку (если оценка ниже 3 или неявка)
+                    if (int.TryParse(controlResult, out int grade) && grade < 3 || controlResult.ToLower() == "неявка" || controlResult.ToLower() == "незачтено")
                     {
-                        notifyItem = new NotifyItem { FIO = fio };
-                        notifyItems.Add(notifyItem);
+                        // Ищем существующий объект NotifyItem для этого студента
+                        var notifyItem = notifyItems.Find(item => item.FIO == fio);
+
+                        if (notifyItem == null)
+                        {
+                            notifyItem = new NotifyItem { FIO = fio };
+                            notifyItems.Add(notifyItem);
+                        }
+
+                        // Добавляем информацию о незданной дисциплине
+                        notifyItem.UnpassedList.Add(new UnpassItem
+                        {
+                            DisciplineName = disciplineName,
+                            TypeControl = attestationType,
+                            ControlResult = controlResult
+                        });
                     }
-
-                    // Добавляем информацию о незданной дисциплине
-                    notifyItem.UnpassedList.Add(new UnpassItem
-                    {
-                        DisciplineName = disciplineName,
-                        TypeControl = typeControl,
-                        ControlResult = controlResult
-                    });
+                    
                 }
+
+                
             }
         }
-
-        // Сохранение результата в файл (например, в txt)
-        using (var writer = new StreamWriter("неявки_и_незданные.txt"))
-        {
-            foreach (var notifyItem in notifyItems)
-            {
-                writer.WriteLine($"ФИО: {notifyItem.FIO}");
-                foreach (var unpassItem in notifyItem.UnpassedList)
-                {
-                    writer.WriteLine($"  Дисциплина: {unpassItem.DisciplineName}, Тип: {unpassItem.TypeControl}, Результат: {unpassItem.ControlResult}");
-                }
-            }
-        }
+        
 
         Console.WriteLine("Анализ завершен. Результаты сохранены в файл 'неявки_и_незданные.txt'.");
+    }
+    static string FindAttestationTypeByDiscipline(Dictionary<string, List<string>> disciplines, string discipline)
+    {
+        foreach (var entry in disciplines)
+        {
+            if (entry.Value.Contains(discipline))
+            {
+                return entry.Key; 
+            }
+        }
+
+        return null; 
     }
 }
