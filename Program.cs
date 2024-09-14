@@ -2,6 +2,7 @@
 using DocumentFormat.OpenXml.Wordprocessing;
 using OfficeOpenXml;
 using UnpassNotifier.Classes;
+using Xceed.Words.NET;
 
 namespace UnpassNotifier;
 
@@ -56,47 +57,29 @@ internal class Program
     private static async Task WordGenerate(List<NotifyItem> notifyItems, string outputDirectory, string templatePath)
     {
         var innerTasks = new List<Task>();
-
+        
         foreach (var notifyItem in notifyItems)
         {
             innerTasks.Add(Task.Run(() =>
             {
                 var currentPath = outputDirectory + @$"\{notifyItem.FIO}.docx";
-                // File.Copy(templatePath, currentPath, true);
-
-                using var document = WordprocessingDocument.Open(templatePath, false);
-                var innerText = document.MainDocumentPart.Document.InnerText;
+                // Открытие документа-шаблона
+                using (DocX document = DocX.Load(templatePath))
+                {
+                    // Подстановка данных
+                    document.ReplaceText("{{ФИО}}", notifyItem.FIO);
+                    document.ReplaceText("{{дата}}", DateTime.Now.ToShortDateString());
+                    document.ReplaceText("{{период1}}", period1);
+                    document.ReplaceText("{{период2}}", period2);
+                    // Сохранение нового документа
+                    document.SaveAs(currentPath);
+                }
                 
-                if (innerText.Contains("{{ФИО}}"))
-                {
-                    innerText = innerText.Replace("{{ФИО}}", notifyItem.FIO);
-                }
-
-                if (innerText.Contains("{{Дата}}"))
-                {
-                    innerText = innerText.Replace("{{Дата}}", DateTime.Now.ToShortDateString());
-                }
-
-                if (innerText.Contains("{{период1}}"))
-                {
-                    innerText = innerText.Replace("{{период1}}", period1);
-                }
-
-                if (innerText.Contains("{{период2}}"))
-                {
-                    innerText = innerText.Replace("{{период2}}", period2);
-                }
-
-                // document.MainDocumentPart.Document.InnerText = innerText;
-                // document.MainDocumentPart.Document.Body.InnerText = innerText;
-                
-                
-                document.SaveAs(currentPath);
-                document.Close();
             }));
         }
-
+        
         Task.WaitAll(innerTasks.ToArray());
+
     }
 
     private static async Task<List<NotifyItem>> ExcelParse(string filePath)
