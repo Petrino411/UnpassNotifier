@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("UnpassNotifier")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f5271c8024120b7d6e53e3247535e2f0fb35a1e6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8aa61d2aeb8ecb8c70811925cd974b1f4e2a79b1")]
 [assembly: System.Reflection.AssemblyProductAttribute("UnpassNotifier")]
 [assembly: System.Reflection.AssemblyTitleAttribute("UnpassNotifier")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

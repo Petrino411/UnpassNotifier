@@ -2,6 +2,7 @@
 using DocumentFormat.OpenXml.Wordprocessing;
 using OfficeOpenXml;
 using UnpassNotifier.Classes;
+using Xceed.Document.NET;
 using Xceed.Words.NET;
 
 namespace UnpassNotifier;
@@ -57,7 +58,7 @@ internal class Program
     private static async Task WordGenerate(List<NotifyItem> notifyItems, string outputDirectory, string templatePath)
     {
         var innerTasks = new List<Task>();
-        
+
         foreach (var notifyItem in notifyItems)
         {
             innerTasks.Add(Task.Run(() =>
@@ -71,15 +72,35 @@ internal class Program
                     document.ReplaceText("{{дата}}", DateTime.Now.ToShortDateString());
                     document.ReplaceText("{{период1}}", period1);
                     document.ReplaceText("{{период2}}", period2);
+
+                    var table = document.Tables.FirstOrDefault();
+                    table.RemoveRow(1);
+                    
+                    var smallFontFormat = new Formatting
+                    {
+                        Size = 11
+                    };
+                    
+                    if (table != null)
+                    {
+                        for (var row = 1; row <= notifyItem.UnpassedList.Count; row++)
+                        {
+                            table.InsertRow();
+                            table.Rows[row].Cells[0].Paragraphs[0].Append($"{row}.", smallFontFormat);
+                            table.Rows[row].Cells[1].Paragraphs[0].Append($"{notifyItem.UnpassedList[row-1].DisciplineName}",smallFontFormat);
+                            table.Rows[row].Cells[2].Paragraphs[0].Append($"{notifyItem.UnpassedList[row-1].TypeControl}",smallFontFormat);
+                            table.Rows[row].Cells[3].Paragraphs[0].Append($"",smallFontFormat);
+                            table.Rows[row].Cells[4].Paragraphs[0].Append($"{notifyItem.UnpassedList[row-1].ControlResult}",smallFontFormat);
+                            
+                        }
+                    }
                     // Сохранение нового документа
                     document.SaveAs(currentPath);
                 }
-                
             }));
         }
-        
-        Task.WaitAll(innerTasks.ToArray());
 
+        Task.WaitAll(innerTasks.ToArray());
     }
 
     private static async Task<List<NotifyItem>> ExcelParse(string filePath)
@@ -120,7 +141,7 @@ internal class Program
                     {
                         DisciplineName = disciplineName,
                         TypeControl = attestationType,
-                        ControlResult = controlResult
+                        ControlResult = controlResult == "2" ? "2 (неудовлетворительно)" : controlResult,
                     });
                 }
             }
