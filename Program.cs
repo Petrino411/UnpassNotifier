@@ -3,32 +3,46 @@ using UnpassNotifier.Classes;
 
 namespace UnpassNotifier;
 
-class Program
+internal static class Program
 {
-    static void Main(string[] args)
+    private static void Main(string[] args)
     {
-        string filePath = "207ис.xlsx";  // Замените на путь к вашему файлу
+        var directories = Directory.GetDirectories(Environment.CurrentDirectory);
+        string resourcesDirectory;
+        try
+        {
+            resourcesDirectory = directories.First(x => x.Contains("Resources"));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Должна быть папка Resources в директории программы");
+            throw;
+        }
+        var excelFiles = Directory.GetFiles(resourcesDirectory, "*.xlsx", SearchOption.AllDirectories);
+        
+        
+        var filePath = "207ис.xlsx";  // Замените на путь к вашему файлу
 
-        List<NotifyItem> notifyItems = new List<NotifyItem>();
+        var notifyItems = new List<NotifyItem>();
 
         // Чтение файла Excel
-        using (ExcelPackage package = new ExcelPackage(new FileInfo(filePath)))
+        using (var package = new ExcelPackage(new FileInfo(filePath)))
         {
-            ExcelWorksheet worksheet = package.Workbook.Worksheets[0]; 
+            var worksheet = package.Workbook.Worksheets[0]; 
 
             
-            for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
+            for (var row = 2; row <= worksheet.Dimension.End.Row; row++)
             {
-                string fio = worksheet.Cells[row, 2].Text; // Предположим, что ФИО в первой колонке
-                string disciplineName = worksheet.Cells[row, 2].Text; // Предположим, что дисциплина во второй колонке
-                string typeControl = worksheet.Cells[row, 3].Text; // Тип контроля (зачет/экзамен)
-                string controlResult = worksheet.Cells[row, 4].Text; // Результат контроля (оценка)
+                var fio = worksheet.Cells[row, 2].Text; // Предположим, что ФИО в первой колонке
+                var disciplineName = worksheet.Cells[row, 2].Text; // Предположим, что дисциплина во второй колонке
+                var typeControl = worksheet.Cells[row, 3].Text; // Тип контроля (зачет/экзамен)
+                var controlResult = worksheet.Cells[row, 4].Text; // Результат контроля (оценка)
 
                 // Проверяем оценку (если оценка ниже 3 или неявка)
                 if (int.TryParse(controlResult, out int grade) && grade < 3 || controlResult.ToLower() == "неявка")
                 {
                     // Ищем существующий объект NotifyItem для этого студента
-                    NotifyItem notifyItem = notifyItems.Find(item => item.FIO == fio);
+                    var notifyItem = notifyItems.Find(item => item.FIO == fio);
 
                     if (notifyItem == null)
                     {
@@ -48,7 +62,7 @@ class Program
         }
 
         // Сохранение результата в файл (например, в txt)
-        using (StreamWriter writer = new StreamWriter("неявки_и_незданные.txt"))
+        using (var writer = new StreamWriter("неявки_и_незданные.txt"))
         {
             foreach (var notifyItem in notifyItems)
             {
