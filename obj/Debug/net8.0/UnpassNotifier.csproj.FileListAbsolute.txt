@@ -99,3 +99,5 @@ E:\UnpassNotifier\obj\Debug\net8.0\refint\UnpassNotifier.dll
 E:\UnpassNotifier\obj\Debug\net8.0\UnpassNotifier.pdb
 E:\UnpassNotifier\obj\Debug\net8.0\UnpassNotifier.genruntimeconfig.cache
 E:\UnpassNotifier\obj\Debug\net8.0\ref\UnpassNotifier.dll
+C:\Projects\UnpassNotifier\bin\Debug\net8.0\DocumentFormat.OpenXml.dll
+C:\Projects\UnpassNotifier\bin\Debug\net8.0\System.IO.Packaging.dll

@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "E:\\UnpassNotifier\\UnpassNotifier.csproj": {}
+    "C:\\Projects\\UnpassNotifier\\UnpassNotifier.csproj": {}
   },
   "projects": {
-    "E:\\UnpassNotifier\\UnpassNotifier.csproj": {
+    "C:\\Projects\\UnpassNotifier\\UnpassNotifier.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\UnpassNotifier\\UnpassNotifier.csproj",
+        "projectUniqueName": "C:\\Projects\\UnpassNotifier\\UnpassNotifier.csproj",
         "projectName": "UnpassNotifier",
-        "projectPath": "E:\\UnpassNotifier\\UnpassNotifier.csproj",
-        "packagesPath": "C:\\Users\\Petrino\\.nuget\\packages\\",
-        "outputPath": "E:\\UnpassNotifier\\obj\\",
+        "projectPath": "C:\\Projects\\UnpassNotifier\\UnpassNotifier.csproj",
+        "packagesPath": "C:\\Users\\dyavo\\.nuget\\packages\\",
+        "outputPath": "C:\\Projects\\UnpassNotifier\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Petrino\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\dyavo\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -53,6 +53,10 @@
             "EPPlus": {
               "target": "Package",
               "version": "[4.5.3.3, )"
+            },
+            "Open-XML-SDK": {
+              "target": "Package",
+              "version": "[2.9.1, )"
             }
           },
           "imports": [
@@ -71,7 +75,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.401/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

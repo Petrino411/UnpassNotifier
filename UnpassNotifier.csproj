@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <PackageReference Include="EPPlus" Version="4.5.3.3" />
+      <PackageReference Include="Open-XML-SDK" Version="2.9.1" />
     </ItemGroup>
 
 </Project>
