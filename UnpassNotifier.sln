@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnpassNotifier", "UnpassNotifier.csproj", "{F60EB4FD-A166-4E54-B21F-BBD73A748961}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnpassNotifier\UnpassNotifier", "UnpassNotifier\UnpassNotifier.csproj", "{F60EB4FD-A166-4E54-B21F-BBD73A748961}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
