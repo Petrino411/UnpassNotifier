@@ -9,9 +9,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="67686238-6faf-4316-bc99-3df11590a252" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/UnpassNotifier/obj/Debug/net8.0/UnpassNotifier.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifier/obj/Debug/net8.0/UnpassNotifier.AssemblyInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UnpassNotifier/obj/Debug/net8.0/UnpassNotifier.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifier/obj/Debug/net8.0/UnpassNotifier.AssemblyInfoInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UnpassNotifier/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifier/obj/rider.project.model.nuget.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.UnpassNotifier/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.UnpassNotifier/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifierDesktop/MainWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifierDesktop/MainWindow.xaml.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,9 +101,9 @@
       </method>
     </configuration>
     <configuration name="UnpassNotifierDesktop" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="" />
+      <option name="EXE_PATH" value="$PROJECT_DIR$/UnpassNotifierDesktop/bin/Debug/net8.0-windows/UnpassNotifierDesktop.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="USE_MONO" value="0" />
@@ -112,13 +111,17 @@
       <option name="PROJECT_PATH" value="$PROJECT_DIR$/UnpassNotifierDesktop/UnpassNotifierDesktop.csproj" />
       <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
-      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
+      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="0" />
       <option name="PROJECT_KIND" value="DotNetCore" />
-      <option name="PROJECT_TFM" value="" />
+      <option name="PROJECT_TFM" value="net8.0-windows" />
       <method v="2">
         <option name="Build" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue=".NET Project.UnpassNotifier" />
+      <item itemvalue=".NET Project.UnpassNotifierDesktop" />
+    </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -137,6 +140,7 @@
       <workItem from="1726506612941" duration="1020000" />
       <workItem from="1726507656535" duration="1115000" />
       <workItem from="1726508819046" duration="20000" />
+      <workItem from="1726508941273" duration="1382000" />
     </task>
     <servers />
   </component>
