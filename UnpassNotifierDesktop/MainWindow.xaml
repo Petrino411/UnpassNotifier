@@ -24,9 +24,9 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <TextBox IsReadOnly="True" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Height="40" Margin="5" Name="TemplateBox" VerticalAlignment="Top" />
-            <ListView Grid.Column="0" Grid.Row="1" Margin="5" Name="WordFiles" VerticalAlignment="Stretch" />
-            <ListView Grid.Column="1" Grid.Row="1" Margin="5" Name="ExcelFiles" VerticalAlignment="Stretch" />
+            <ListView Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Height="40" Margin="5" Name="TemplateListView" VerticalAlignment="Top" />
+            <ListView Grid.Column="0" Grid.Row="1" Margin="5" Name="WordFilesListView" VerticalAlignment="Stretch" />
+            <ListView Grid.Column="1" Grid.Row="1" Margin="5" Name="ExcelFilesListView" VerticalAlignment="Stretch" />
             <ListView Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" DockPanel.Dock="Right" Margin="5"
                       Name="OutputFiles" />
         </Grid>

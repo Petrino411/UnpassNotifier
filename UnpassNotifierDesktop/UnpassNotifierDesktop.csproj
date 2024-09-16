@@ -12,6 +12,7 @@
     <ItemGroup>
       <PackageReference Include="DocX" Version="1.6.0" />
       <PackageReference Include="EPPlus" Version="4.5.3.3" />
+      <PackageReference Include="FreeSpire.Doc" Version="12.2.0" />
     </ItemGroup>
 
 </Project>

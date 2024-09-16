@@ -1,5 +1,10 @@
-﻿using Xceed.Document.NET;
+﻿using System.IO;
+using System.Windows.Controls;
+using Spire.Doc;
+using UnpassNotifierDesktop.Classes.Models;
+using Xceed.Document.NET;
 using Xceed.Words.NET;
+using Document = Spire.Doc.Document;
 
 namespace UnpassNotifierDesktop.Classes.Extenstions;
 
@@ -54,18 +59,20 @@ public static class WordExtensions
 
     #endregion
 
-
     #region Generator
 
-    public static async Task WordGenerate(List<NotifyItem> notifyItems, string outputDirectory, string templatePath)
+    public static async Task WordGenerate(List<NotifyItem> notifyItems, string outputDirectory, string templatePath,
+        ListView? outputFiles, Queue<Task> tasks)
     {
-        var innerTasks = new List<Task>();
+        Directory.CreateDirectory(outputDirectory + @"\Word");
+        Directory.CreateDirectory(outputDirectory + @"\PDF");
 
         foreach (var notifyItem in notifyItems)
         {
-            innerTasks.Add(Task.Run(() =>
+            tasks.Enqueue(Task.Run(() =>
             {
-                var currentPath = outputDirectory + @$"\{notifyItem.FIO}.docx";
+                var currentWordPath = outputDirectory + @$"\Word\{notifyItem.FIO}.docx";
+                var currentPdfPath = outputDirectory + $@"\PDF\{notifyItem.FIO}.pdf";
                 // Открытие документа-шаблона
                 using var document = DocX.Load(templatePath);
 
@@ -102,12 +109,38 @@ public static class WordExtensions
                     }
                 }
 
-                document.SaveAs(currentPath);
+                Console.WriteLine($"Завершение создания {currentWordPath}");
+                document.SaveAs(currentWordPath);
+
+                var HasPdf = false;
+                try
+                {
+                    ConvertDocxToPdf(currentWordPath, currentPdfPath);
+                    HasPdf = true;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+
+
+                outputFiles?.Dispatcher.InvokeAsync(() =>
+                {
+                    outputFiles.Items.Add(HasPdf
+                        ? new FilePathModel(currentWordPath, currentPdfPath)
+                        : new FilePathModel(currentWordPath));
+                });
             }));
         }
-
-        Task.WaitAll(innerTasks.ToArray());
     }
 
     #endregion
+
+    public static async void ConvertDocxToPdf(string inputFile, string outputFile)
+    {
+        Console.WriteLine($"Создание PDF для {inputFile}");
+        var document = new Document();
+        document.LoadFromFile(inputFile);
+        document.SaveToFile(outputFile, FileFormat.PDF);
+    }
 }
