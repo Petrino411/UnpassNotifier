@@ -9,4 +9,9 @@
         <LangVersion>latestmajor</LangVersion>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="DocX" Version="1.6.0" />
+      <PackageReference Include="EPPlus" Version="4.5.3.3" />
+    </ItemGroup>
+
 </Project>

@@ -20,4 +20,25 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
     }
+
+
+    private void SelectShedulesBtn(object sender, RoutedEventArgs e)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void SelectAttestationsBtn(object sender, RoutedEventArgs e)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void SelectTemplateBtn(object sender, RoutedEventArgs e)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void RunBtn(object sender, RoutedEventArgs e)
+    {
+        throw new NotImplementedException();
+    }
 }

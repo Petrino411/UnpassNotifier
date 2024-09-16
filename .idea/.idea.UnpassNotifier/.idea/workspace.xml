@@ -9,14 +9,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="67686238-6faf-4316-bc99-3df11590a252" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/UnpassNotifierDesktop/Classes/Discipline.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UnpassNotifierDesktop/Classes/Extenstions/ExcelExtensions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UnpassNotifierDesktop/Classes/Extenstions/WordExtensions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UnpassNotifierDesktop/Classes/NotifyItem.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UnpassNotifierDesktop/Classes/UnpassItem.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.UnpassNotifier/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.UnpassNotifier/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UnpassNotifier.sln" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifier.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UnpassNotifier/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifier/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UnpassNotifier/UnpassNotifier.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifier/UnpassNotifier.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UnpassNotifier/WordExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifier/WordExtensions.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UnpassNotifier/obj/Debug/net8.0/UnpassNotifier.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifier/obj/Debug/net8.0/UnpassNotifier.AssemblyInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UnpassNotifier/obj/Debug/net8.0/UnpassNotifier.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifier/obj/Debug/net8.0/UnpassNotifier.AssemblyInfoInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UnpassNotifier/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifier/obj/rider.project.model.nuget.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifier/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifier/obj/rider.project.restore.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifierDesktop/MainWindow.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifierDesktop/MainWindow.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifierDesktop/MainWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifierDesktop/MainWindow.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifierDesktop/UnpassNotifierDesktop.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifierDesktop/UnpassNotifierDesktop.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/Debug/net8.0-windows/MainWindow.g.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/Debug/net8.0-windows/MainWindow.g.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/Debug/net8.0-windows/UnpassNotifierDesktop.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/Debug/net8.0-windows/UnpassNotifierDesktop.AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/Debug/net8.0-windows/UnpassNotifierDesktop.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/Debug/net8.0-windows/UnpassNotifierDesktop.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/Debug/net8.0-windows/UnpassNotifierDesktop.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/Debug/net8.0-windows/UnpassNotifierDesktop.assets.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/Debug/net8.0-windows/UnpassNotifierDesktop_MarkupCompile.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/Debug/net8.0-windows/UnpassNotifierDesktop_MarkupCompile.lref" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/UnpassNotifierDesktop.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/UnpassNotifierDesktop.csproj.nuget.dgspec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/UnpassNotifierDesktop.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/UnpassNotifierDesktop.csproj.nuget.g.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/project.assets.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/project.nuget.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/project.packagespec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/rider.project.model.nuget.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifierDesktop/obj/rider.project.restore.info" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,22 +88,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Project.UnpassNotifier.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;XamlPreviewOptionsPage&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Project.UnpassNotifier.executor": "Debug",
+    ".NET Project.UnpassNotifierDesktop.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.environmentSetup",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RunManager" selected=".NET Project.UnpassNotifier">
+}]]></component>
+  <component name="RunManager" selected=".NET Project.UnpassNotifierDesktop">
     <configuration name="UnpassNotifier" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="$PROJECT_DIR$/UnpassNotifier/bin/Debug/net8.0/UnpassNotifier.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -138,6 +156,8 @@
       <workItem from="1726498441636" duration="6520000" />
       <workItem from="1726506347737" duration="36000" />
       <workItem from="1726506396119" duration="203000" />
+      <workItem from="1726506612941" duration="1020000" />
+      <workItem from="1726507656535" duration="1115000" />
     </task>
     <servers />
   </component>
