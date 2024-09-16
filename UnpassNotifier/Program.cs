@@ -49,7 +49,7 @@ internal class Program
                 var outputDirectory = Directory.CreateDirectory(resultsDirectory + @$"\{targetFile}").FullName;
 
                 Console.WriteLine($"Создание Word уведомлений для {groupName}");
-                await WordExtensions.WordGenerate(notifies, outputDirectory, templatePath, disciplines);
+                await WordExtensions.WordGenerate(notifies, outputDirectory, templatePath);
                 return;
             }));
         }

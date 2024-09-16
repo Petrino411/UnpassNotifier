@@ -58,10 +58,8 @@ public static class WordExtensions
 
     #region Generator
 
-    public static async Task WordGenerate(List<NotifyItem> notifyItems, string outputDirectory, string templatePath,
-        HashSet<Discipline> disciplines)
+    public static async Task WordGenerate(List<NotifyItem> notifyItems, string outputDirectory, string templatePath)
     {
-        //TODO: make work with attestationDate
         var innerTasks = new List<Task>();
 
         foreach (var notifyItem in notifyItems)
