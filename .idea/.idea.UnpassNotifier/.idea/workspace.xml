@@ -8,50 +8,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="67686238-6faf-4316-bc99-3df11590a252" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/201СА.xlsx - 14.09.2024/Акопов Эдуард Арменович.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/201СА.xlsx - 14.09.2024/Астахова Александра Евгеньевна.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/201СА.xlsx - 14.09.2024/Беликов Михаил Дмитриевич.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/201СА.xlsx - 14.09.2024/Ермолаев Данила Андреевич.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/201СА.xlsx - 14.09.2024/Ифраимов Даниэль Вадимович.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/201СА.xlsx - 14.09.2024/Каленкевич Александр Иванович.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/201СА.xlsx - 14.09.2024/Клитин Николай Александрович.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/201СА.xlsx - 14.09.2024/Мишин Артём Геннадьевич.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/201СА.xlsx - 14.09.2024/Синдеев Михаил Михайлович.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/201СА.xlsx - 14.09.2024/Хачатрян Александр Арменакович.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/201СА.xlsx - 14.09.2024/Ходачок Владимир Ярославович.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/207ис.xlsx - 14.09.2024/Акушали Асадула Шафиевич.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/207ис.xlsx - 14.09.2024/Андриянов Максим Александрович.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/207ис.xlsx - 14.09.2024/Болдин Тимофей Вячеславович.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/207ис.xlsx - 14.09.2024/Евлоев Адам Биланович.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/207ис.xlsx - 14.09.2024/Поздняков Дмитрий Романович.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/207ис.xlsx - 14.09.2024/Тааева Зилана Османовна.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/207ис.xlsx - 14.09.2024/Хамчиев Рамазан Мустафаевич.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/207ис.xlsx - 14.09.2024/Чигвинцев Никита Викторович.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/UnpassNotifier.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/UnpassNotifier.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/UnpassNotifier.exe" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/UnpassNotifier.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/UnpassNotifier.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/UnpassNotifier.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/UnpassNotifier.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/UnpassNotifier.AssemblyInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/UnpassNotifier.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/UnpassNotifier.AssemblyInfoInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/UnpassNotifier.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/UnpassNotifier.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/UnpassNotifier.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/UnpassNotifier.assets.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/UnpassNotifier.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/UnpassNotifier.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/UnpassNotifier.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/UnpassNotifier.csproj.CoreCompileInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/UnpassNotifier.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/UnpassNotifier.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/UnpassNotifier.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/UnpassNotifier.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/UnpassNotifier.genruntimeconfig.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/UnpassNotifier.genruntimeconfig.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/UnpassNotifier.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/UnpassNotifier.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/UnpassNotifier.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/UnpassNotifier.sourcelink.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/apphost.exe" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/apphost.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/ref/UnpassNotifier.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/ref/UnpassNotifier.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/refint/UnpassNotifier.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/refint/UnpassNotifier.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/UnpassNotifier.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/UnpassNotifier.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/UnpassNotifier.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/obj/UnpassNotifier.csproj.nuget.g.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.assets.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.nuget.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.packagespec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/obj/rider.project.model.nuget.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/obj/rider.project.restore.info" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UnpassNotifier/Classes/Discipline.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UnpassNotifier/ExcelExtensions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UnpassNotifier/WordExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.UnpassNotifier/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.UnpassNotifier/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/201ис.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/Баранов Д 112ИС.doc" beforeDir="false" afterPath="$PROJECT_DIR$/Resources/Баранов Д 112ИС.doc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/УВЕДОМЛЕНИЕ.docx" beforeDir="false" afterPath="$PROJECT_DIR$/Resources/УВЕДОМЛЕНИЕ.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/201СА.xlsx - 16.09.2024/Акопов Эдуард Арменович.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/201СА.xlsx - 16.09.2024/Астахова Александра Евгеньевна.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/201СА.xlsx - 16.09.2024/Беликов Михаил Дмитриевич.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/201СА.xlsx - 16.09.2024/Ермолаев Данила Андреевич.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/201СА.xlsx - 16.09.2024/Ифраимов Даниэль Вадимович.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/201СА.xlsx - 16.09.2024/Каленкевич Александр Иванович.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/201СА.xlsx - 16.09.2024/Клитин Николай Александрович.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/201СА.xlsx - 16.09.2024/Мишин Артём Геннадьевич.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/201СА.xlsx - 16.09.2024/Синдеев Михаил Михайлович.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/201СА.xlsx - 16.09.2024/Хачатрян Александр Арменакович.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/201СА.xlsx - 16.09.2024/Ходачок Владимир Ярославович.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/207ис.xlsx - 16.09.2024/Акушали Асадула Шафиевич.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/207ис.xlsx - 16.09.2024/Андриянов Максим Александрович.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/207ис.xlsx - 16.09.2024/Болдин Тимофей Вячеславович.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/207ис.xlsx - 16.09.2024/Евлоев Адам Биланович.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/207ис.xlsx - 16.09.2024/Поздняков Дмитрий Романович.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/207ис.xlsx - 16.09.2024/Тааева Зилана Османовна.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/207ис.xlsx - 16.09.2024/Хамчиев Рамазан Мустафаевич.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/207ис.xlsx - 16.09.2024/Чигвинцев Никита Викторович.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifier.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifier.sln.DotSettings.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifier/Classes/UnpassItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifier/Classes/UnpassItem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifier/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifier/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifier/obj/Debug/net8.0/UnpassNotifier.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifier/obj/Debug/net8.0/UnpassNotifier.AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifier/obj/Debug/net8.0/UnpassNotifier.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifier/obj/Debug/net8.0/UnpassNotifier.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnpassNotifier/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/UnpassNotifier/obj/rider.project.restore.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Документация/Уведомления - реализация.docx" beforeDir="false" afterPath="$PROJECT_DIR$/Документация/Уведомления - реализация.docx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,39 +64,61 @@
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/2c8e7ca976f350cba9836d5565dac56b11e0b56656fa786460eb1395857a6fa/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/6f90c6c13479b8c2a5be98f3d75dfc3bd885a055652d8a32904ca2448132949e/Future.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/c7da56581ee7b20208f09e80b735961e4d5d7b9e5562bfdec94a75c57b391/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
 }</component>
   <component name="ProjectId" id="2m3UEdsHbkIpKihknTC5eDUopDb" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Project.UnpassNotifier.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Project.UnpassNotifier.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="UnpassNotifier" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="$PROJECT_DIR$/bin/Debug/net8.0/UnpassNotifier.exe" />
+      <option name="EXE_PATH" value="$PROJECT_DIR$/UnpassNotifier/bin/Debug/net8.0/UnpassNotifier.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="USE_MONO" value="0" />
       <option name="RUNTIME_ARGUMENTS" value="" />
-      <option name="PROJECT_PATH" value="$PROJECT_DIR$/UnpassNotifier.csproj" />
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/UnpassNotifier/UnpassNotifier.csproj" />
       <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
       <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="0" />
@@ -128,6 +139,8 @@
       <updated>1726304645646</updated>
       <workItem from="1726304647513" duration="10759000" />
       <workItem from="1726469094851" duration="5711000" />
+      <workItem from="1726497802790" duration="587000" />
+      <workItem from="1726498441636" duration="6520000" />
     </task>
     <servers />
   </component>
@@ -138,5 +151,37 @@
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/UnpassNotifier/ExcelExtensions.cs</url>
+          <line>94</line>
+          <properties documentPath="C:\Projects\UnpassNotifier\UnpassNotifier\ExcelExtensions.cs" containingFunctionPresentation="Method 'FillDisciplines'">
+            <startOffsets>
+              <option value="3668" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3687" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/UnpassNotifier/WordExtensions.cs</url>
+          <line>47</line>
+          <properties documentPath="C:\Projects\UnpassNotifier\UnpassNotifier\WordExtensions.cs" containingFunctionPresentation="Method 'DisciplinesAttestationFill'">
+            <startOffsets>
+              <option value="1581" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1582" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
