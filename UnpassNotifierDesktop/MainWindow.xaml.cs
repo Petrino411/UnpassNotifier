@@ -39,19 +39,20 @@ public partial class MainWindow : Window
 
     private void SelectShedulesBtn(object sender, RoutedEventArgs e)
     {
-        OpenFileDialog openFileDialog = new OpenFileDialog
+        var fileDialog = new OpenFileDialog
         {
             Multiselect = true,  
             Filter = "Графики аттестации|*.docx|All Files|*.*",
             Title = "Выберите файлы" 
         };
         
-        if (openFileDialog.ShowDialog() == true)
+        if (fileDialog.ShowDialog() == true)
         {
-            sheduleFiles = openFileDialog.FileNames.ToList();
+            sheduleFiles = fileDialog.FileNames.ToList();
             foreach (var sheduleFile in sheduleFiles)
             {
                 WordFiles.Items.Add(sheduleFile);
+                Console.WriteLine($"Выбран файл графика: {sheduleFile}");
             }
             
         }
@@ -60,19 +61,20 @@ public partial class MainWindow : Window
 
     private void SelectAttestationsBtn(object sender, RoutedEventArgs e)
     {
-        OpenFileDialog openFileDialog = new OpenFileDialog
+        var fileDialog = new OpenFileDialog
         {
             Multiselect = true,  
             Filter = "Сводные ведомости|*.xlsx|All Files|*.*",
             Title = "Выберите файлы" 
         };
         
-        if (openFileDialog.ShowDialog() == true)
+        if (fileDialog.ShowDialog() == true)
         {
-            excelFiles = openFileDialog.FileNames.ToList();
+            excelFiles = fileDialog.FileNames.ToList();
             foreach (var excelFile in excelFiles)
             {
                 ExcelFiles.Items.Add(excelFile);
+                Console.WriteLine($"Выбран файл ведомости: {excelFile}");
             }
         }
         
@@ -80,16 +82,17 @@ public partial class MainWindow : Window
 
     private void SelectTemplateBtn(object sender, RoutedEventArgs e)
     {
-        OpenFileDialog openFileDialog = new OpenFileDialog
+        var fileDialog = new OpenFileDialog
         {
             Filter = "Шаблон уведомления|*.docx|All Files|*.*",
             Title = "Выберите файлы" 
         };
         
-        if (openFileDialog.ShowDialog() == true)
+        if (fileDialog.ShowDialog() == true)
         {
-            templatePath = openFileDialog.FileName;
+            templatePath = fileDialog.FileName;
             TemplateBox.Text = templatePath;
+            Console.WriteLine($"Выбран файл шаблона уведомления: {templatePath}");
         }
         
     }
