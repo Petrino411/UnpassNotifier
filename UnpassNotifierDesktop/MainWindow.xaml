@@ -5,11 +5,8 @@
         xmlns:local="clr-namespace:UnpassNotifierDesktop"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Height="450" Title="MainWindow" Width="1000">
+        Height="450" Title="UnpassNotifier" Width="1000">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
             <RowDefinition Height="60"></RowDefinition>
@@ -28,7 +25,14 @@
             <ListView Grid.Column="0" Grid.Row="1" Margin="5" Name="WordFilesListView" VerticalAlignment="Stretch" />
             <ListView Grid.Column="1" Grid.Row="1" Margin="5" Name="ExcelFilesListView" VerticalAlignment="Stretch" />
             <ListView Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" DockPanel.Dock="Right" Margin="5"
-                      Name="OutputFiles" />
+                      Name="OutputFiles" MouseRightButtonDown="OutputFiles_OnMouseRightButtonDown" >
+                <ListView.ContextMenu>
+                    <ContextMenu Name="outputFilesContextMenu">
+                        <MenuItem Header="Преобразовать в pdf" Click="ConvertToPDF" />
+                        <MenuItem Header="Преобразовать в pdf быстро" Click="ConvertToPDFAsync" />
+                    </ContextMenu>
+                </ListView.ContextMenu>
+            </ListView>
         </Grid>
 
         <Grid Grid.Row="1" VerticalAlignment="Bottom" Height="40" Margin="10">

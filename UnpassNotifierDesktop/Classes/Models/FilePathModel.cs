@@ -6,7 +6,7 @@ public class FilePathModel
 {
     public string WordPath { get; }
     public string FileName { get; }
-    public string PdfPath { get; } = string.Empty;
+    public string PdfPath { get; set; } = string.Empty;
 
     public FilePathModel(string wordPath)
     {

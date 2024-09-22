@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
@@ -16,8 +17,8 @@ namespace UnpassNotifierDesktop;
 /// </summary>
 public partial class MainWindow : Window
 {
-    private List<FilePathModel> sheduleFiles { get; } = [];
-    private List<FilePathModel> excelFiles { get; } = [];
+    private ObservableCollection<FilePathModel> sheduleFiles { get; } = [];
+    private ObservableCollection<FilePathModel> excelFiles { get; } = [];
     private string resultsDirectory { get; }
     private string resourcesDirectory { get; }
     private static Queue<Task> tasks { get; } = new();
@@ -28,20 +29,24 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
+
         var directories = Directory.GetDirectories(Environment.CurrentDirectory);
         resourcesDirectory = directories.FirstOrDefault(x => x.Contains("Resources")) ??
                              Directory.CreateDirectory(Environment.CurrentDirectory + @"\Resources").FullName;
         resultsDirectory = directories.FirstOrDefault(x => x.Contains("Result"))
                            ?? Directory.CreateDirectory(Environment.CurrentDirectory + @"\Result").FullName;
 
-        ExcelFilesListView.KeyDown += RemoveOnKeyDown();
-        WordFilesListView.KeyDown += RemoveOnKeyDown();
+        ExcelFilesListView.KeyDown += RemoveOnKeyDown(excelFiles);
+        WordFilesListView.KeyDown += RemoveOnKeyDown(sheduleFiles);
         TemplateListView.KeyDown += RemoveOnKeyDown();
         ExcelFilesListView.MouseDoubleClick += OpenOnMouseDoubleClick;
         WordFilesListView.MouseDoubleClick += OpenOnMouseDoubleClick;
         TemplateListView.MouseDoubleClick += OpenOnMouseDoubleClick;
         OutputFiles.MouseDoubleClick += OpenOnMouseDoubleClick;
 
+        ExcelFilesListView.ItemsSource = excelFiles;
+        WordFilesListView.ItemsSource = sheduleFiles;
+        
         FillSheduleFiles(Directory
             .GetFiles(resourcesDirectory + @"\Word", "*.docx", SearchOption.AllDirectories)
             .Select(x => new FilePathModel(x))
@@ -54,6 +59,7 @@ public partial class MainWindow : Window
         );
         FillTemplate(Directory.GetFiles(resourcesDirectory, "*.docx", SearchOption.AllDirectories)
             .FirstOrDefault(x => x.Contains("УВЕДОМЛЕНИЕ")));
+
     }
 
     private void OpenOnMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -69,25 +75,39 @@ public partial class MainWindow : Window
                 return;
             }
 
-            if (e.LeftButton == MouseButtonState.Released)
+            if (!string.IsNullOrEmpty(filePathModel.PdfPath))
             {
                 Process.Start(new ProcessStartInfo(filePathModel.PdfPath)
                 {
                     UseShellExecute = true
                 });
             }
-            else
+            
+            Process.Start(new ProcessStartInfo(filePathModel.WordPath)
             {
-                Process.Start(new ProcessStartInfo(filePathModel.WordPath)
-                {
-                    UseShellExecute = true
-                });
-            }
+                UseShellExecute = true
+            });
         }
         catch (Exception exception)
         {
             Console.WriteLine("Не удалось открыть файл");
         }
+    }
+
+    private KeyEventHandler RemoveOnKeyDown(ObservableCollection<FilePathModel> collection)
+    {
+        return (sender, args) =>
+        {
+            if (sender is not ListView listView) return;
+            if (args.Key is not (Key.Delete or Key.Back)) return;
+
+            var array = new FilePathModel[listView.Items.Count];
+            listView.SelectedItems.CopyTo(array, 0);
+            foreach (var item in array)
+            {
+                collection.Remove(item);
+            }
+        };
     }
 
     private KeyEventHandler RemoveOnKeyDown()
@@ -128,11 +148,9 @@ public partial class MainWindow : Window
             return;
         }
 
-        sheduleFiles.AddRange(FilePaths);
-        foreach (var sheduleFile in sheduleFiles)
+        foreach (var filePathModel in FilePaths)
         {
-            WordFilesListView.Items.Add(sheduleFile);
-            Console.WriteLine($"Выбран файл графика: {sheduleFile}");
+            sheduleFiles.Add(filePathModel);
         }
     }
 
@@ -146,11 +164,9 @@ public partial class MainWindow : Window
             return;
         }
 
-        excelFiles.AddRange(FilePaths);
-        foreach (var excelFile in excelFiles)
+        foreach (var filePathModel in FilePaths)
         {
-            ExcelFilesListView.Items.Add(excelFile);
-            Console.WriteLine($"Выбран файл ведомости: {excelFile}");
+            excelFiles.Add(filePathModel);
         }
     }
 
@@ -188,7 +204,7 @@ public partial class MainWindow : Window
         catch (Exception e)
         {
             Console.WriteLine($"Невозможно обработать: {groupName}. Файла либо нет, либо произошла ошибка.");
-            OutputFiles.Items.Add($"{groupName} не сформирован(пропущено)");
+            // OutputFiles.Items.Add($"{groupName} не сформирован(пропущено)");
             return;
         }
     }
@@ -277,4 +293,56 @@ public partial class MainWindow : Window
     }
 
     #endregion
+
+    private void OutputFiles_OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        OutputFiles.ContextMenu.IsOpen = true;
+    }
+    
+    /// <summary>
+    /// Медленно, но экономим оперативку
+    /// </summary>
+    private async void ConvertToPDF(object sender, RoutedEventArgs e)
+    {
+        var selectedItems = OutputFiles.SelectedItems;
+        await Task.Run(() =>
+        {
+            foreach (var selectedItem in selectedItems.Cast<FilePathModel>().ToList())
+            {
+                selectedItem.PdfPath = selectedItem.WordPath.Replace(@"\Word\", @"\PDF\") + ".pdf";
+                WordExtensions.ConvertDocxToPdf(selectedItem.WordPath, selectedItem.PdfPath);
+            }
+
+            Console.WriteLine("Элементы преобразованы в pdf.");
+        });
+    }
+    /// <summary>
+    /// Быстро, но оперативе пизда
+    /// </summary>
+    private async void ConvertToPDFAsync(object sender, RoutedEventArgs e)
+    {
+        var selectedItems = OutputFiles.SelectedItems.Cast<FilePathModel>().ToList();
+
+        var maxThreads = Environment.ProcessorCount;  
+        using (var semaphore = new SemaphoreSlim(maxThreads))
+        {
+            var tasks = selectedItems.Select(async selectedItem =>
+            {
+                await semaphore.WaitAsync();  
+                try
+                {
+                    selectedItem.PdfPath = selectedItem.WordPath.Replace(@"\Word\", @"\PDF\") + ".pdf";
+                    await Task.Run(() => WordExtensions.ConvertDocxToPdf(selectedItem.WordPath, selectedItem.PdfPath));
+                }
+                finally
+                {
+                    semaphore.Release();  
+                }
+            });
+            
+            await Task.WhenAll(tasks);
+        }
+
+        Console.WriteLine("Все элементы преобразованы в PDF.");
+    }
 }

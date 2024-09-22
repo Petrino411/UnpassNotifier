@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 using Spire.Doc;
 using UnpassNotifierDesktop.Classes.Models;
@@ -69,7 +70,7 @@ public static class WordExtensions
 
         foreach (var notifyItem in notifyItems)
         {
-            tasks.Enqueue(Task.Run(() =>
+            tasks.Enqueue( Task.Run(async () =>
             {
                 var currentWordPath = outputDirectory + @$"\Word\{notifyItem.FIO}.docx";
                 var currentPdfPath = outputDirectory + $@"\PDF\{notifyItem.FIO}.pdf";
@@ -112,35 +113,42 @@ public static class WordExtensions
                 Console.WriteLine($"Завершение создания {currentWordPath}");
                 document.SaveAs(currentWordPath);
 
-                var HasPdf = false;
-                try
-                {
-                    ConvertDocxToPdf(currentWordPath, currentPdfPath);
-                    HasPdf = true;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-
-
+                // var hasPdf = await ConvertDocxToPdf(currentWordPath, currentPdfPath);
+                //
+                // outputFiles?.Dispatcher.InvokeAsync(() =>
+                // {
+                //     outputFiles.Items.Add(hasPdf
+                //         ? new FilePathModel(currentWordPath, currentPdfPath)
+                //         : new FilePathModel(currentWordPath));
+                // });
+                
                 outputFiles?.Dispatcher.InvokeAsync(() =>
                 {
-                    outputFiles.Items.Add(HasPdf
-                        ? new FilePathModel(currentWordPath, currentPdfPath)
-                        : new FilePathModel(currentWordPath));
+                    outputFiles.Items.Add(new FilePathModel(currentWordPath));
                 });
+                
             }));
         }
+        
     }
 
     #endregion
 
-    public static async void ConvertDocxToPdf(string inputFile, string outputFile)
+    public static async Task<bool> ConvertDocxToPdf(string inputFile, string outputFile)
     {
-        Console.WriteLine($"Создание PDF для {inputFile}");
-        var document = new Document();
-        document.LoadFromFile(inputFile);
-        document.SaveToFile(outputFile, FileFormat.PDF);
+        try
+        {
+            Console.WriteLine($"Создание PDF для {inputFile}");
+            using var document = new Document();
+            document.LoadFromFile(inputFile);
+            document.SaveToFile(outputFile, FileFormat.PDF);
+            document.Close();
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Ошибка при конвертации {inputFile}: {e.Message}");
+            return false;
+        }
     }
 }
