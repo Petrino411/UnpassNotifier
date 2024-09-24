@@ -29,7 +29,6 @@
                 <ListView.ContextMenu>
                     <ContextMenu Name="outputFilesContextMenu">
                         <MenuItem Header="Преобразовать в pdf" Click="ConvertToPDF" />
-                        <MenuItem Header="Преобразовать в pdf быстро" Click="ConvertToPDFAsync" />
                     </ContextMenu>
                 </ListView.ContextMenu>
             </ListView>
