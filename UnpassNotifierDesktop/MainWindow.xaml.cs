@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -8,7 +9,7 @@ using System.Windows.Input;
 using Microsoft.Win32;
 using UnpassNotifierDesktop.Classes.Extenstions;
 using UnpassNotifierDesktop.Classes.Models;
-using Path = System.IO.Path;
+
 
 namespace UnpassNotifierDesktop;
 
@@ -28,14 +29,22 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-
-
+        
         var directories = Directory.GetDirectories(Environment.CurrentDirectory);
         resourcesDirectory = directories.FirstOrDefault(x => x.Contains("Resources")) ??
                              Directory.CreateDirectory(Environment.CurrentDirectory + @"\Resources").FullName;
         resultsDirectory = directories.FirstOrDefault(x => x.Contains("Result"))
                            ?? Directory.CreateDirectory(Environment.CurrentDirectory + @"\Result").FullName;
-
+        
+        if (!resourcesDirectory.Contains("Word"))
+        {
+            Directory.CreateDirectory(resourcesDirectory + @"\Word");
+        }
+        if (!resourcesDirectory.Contains("Excel"))
+        {
+            Directory.CreateDirectory(resourcesDirectory + @"\Excel");
+        }
+        
         ExcelFilesListView.KeyDown += RemoveOnKeyDown(excelFiles);
         WordFilesListView.KeyDown += RemoveOnKeyDown(sheduleFiles);
         TemplateListView.KeyDown += RemoveOnKeyDown();
@@ -62,7 +71,7 @@ public partial class MainWindow : Window
 
     }
 
-    private void OpenOnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+    private static void OpenOnMouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
         try
         {
@@ -94,7 +103,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private KeyEventHandler RemoveOnKeyDown(ObservableCollection<FilePathModel> collection)
+    private static KeyEventHandler RemoveOnKeyDown(ObservableCollection<FilePathModel> collection)
     {
         return (sender, args) =>
         {
@@ -110,7 +119,7 @@ public partial class MainWindow : Window
         };
     }
 
-    private KeyEventHandler RemoveOnKeyDown()
+    private static KeyEventHandler RemoveOnKeyDown()
     {
         return (sender, args) =>
         {
@@ -140,11 +149,10 @@ public partial class MainWindow : Window
 
     private void FillSheduleFiles(List<FilePathModel>? FilePaths)
     {
-        if (FilePaths == null)
+        if (FilePaths == null || FilePaths.Count == 0)
         {
             sheduleFiles.Clear();
-            WordFilesListView.Items.Clear();
-            Console.WriteLine("Нет графиков в папке по умолчанию");
+            Console.WriteLine("Нет графиков в папке Word");
             return;
         }
 
@@ -156,11 +164,10 @@ public partial class MainWindow : Window
 
     private void FillExcelFiles(List<FilePathModel>? FilePaths)
     {
-        if (FilePaths == null)
+        if (FilePaths == null || FilePaths.Count == 0)
         {
             excelFiles.Clear();
-            ExcelFilesListView.Items.Clear();
-            Console.WriteLine("Нет ведомостей в папке по умолчанию");
+            Console.WriteLine("Нет ведомостей в папке Excel");
             return;
         }
 
@@ -176,7 +183,7 @@ public partial class MainWindow : Window
         {
             this.templatePath = string.Empty;
             TemplateListView.Items.Clear();
-            Console.WriteLine("Нет шаблона уведомлений в папке по умолчанию");
+            Console.WriteLine("Нет шаблона уведомлений в папке Resources");
             return;
         }
 
@@ -211,7 +218,7 @@ public partial class MainWindow : Window
 
     #region Buttons
 
-    private async void SelectShedulesBtn(object sender, RoutedEventArgs e)
+    private void SelectShedulesBtn(object sender, RoutedEventArgs e)
     {
         var fileDialog = new OpenFileDialog
         {
@@ -229,7 +236,7 @@ public partial class MainWindow : Window
         FillSheduleFiles(fileDialog.FileNames.Select(x => new FilePathModel(x)).ToList());
     }
 
-    private async void SelectAttestationsBtn(object sender, RoutedEventArgs e)
+    private void SelectAttestationsBtn(object sender, RoutedEventArgs e)
     {
         var fileDialog = new OpenFileDialog
         {
@@ -247,7 +254,7 @@ public partial class MainWindow : Window
         FillExcelFiles(fileDialog.FileNames.Select(x => new FilePathModel(x)).ToList());
     }
 
-    private async void SelectTemplateBtn(object sender, RoutedEventArgs e)
+    private void SelectTemplateBtn(object sender, RoutedEventArgs e)
     {
         var fileDialog = new OpenFileDialog
         {
@@ -263,7 +270,7 @@ public partial class MainWindow : Window
         FillTemplate(fileDialog.FileName);
     }
 
-    private async void RunBtn(object sender, RoutedEventArgs e)
+    private void RunBtn(object sender, RoutedEventArgs e)
     {
         if (IsRunning
             || string.IsNullOrWhiteSpace(templatePath)
@@ -299,9 +306,6 @@ public partial class MainWindow : Window
         OutputFiles.ContextMenu.IsOpen = true;
     }
     
-    /// <summary>
-    /// Медленно, но экономим оперативку
-    /// </summary>
     private async void ConvertToPDF(object sender, RoutedEventArgs e)
     {
         var selectedItems = OutputFiles.SelectedItems;
@@ -316,33 +320,33 @@ public partial class MainWindow : Window
             Console.WriteLine("Элементы преобразованы в pdf.");
         });
     }
-    /// <summary>
-    /// Быстро, но оперативе пизда
-    /// </summary>
-    private async void ConvertToPDFAsync(object sender, RoutedEventArgs e)
-    {
-        var selectedItems = OutputFiles.SelectedItems.Cast<FilePathModel>().ToList();
-
-        var maxThreads = Environment.ProcessorCount;  
-        using (var semaphore = new SemaphoreSlim(maxThreads))
-        {
-            var tasks = selectedItems.Select(async selectedItem =>
-            {
-                await semaphore.WaitAsync();  
-                try
-                {
-                    selectedItem.PdfPath = selectedItem.WordPath.Replace(@"\Word\", @"\PDF\") + ".pdf";
-                    await Task.Run(() => WordExtensions.ConvertDocxToPdf(selectedItem.WordPath, selectedItem.PdfPath));
-                }
-                finally
-                {
-                    semaphore.Release();  
-                }
-            });
-            
-            await Task.WhenAll(tasks);
-        }
-
-        Console.WriteLine("Все элементы преобразованы в PDF.");
-    }
+    // /// <summary>
+    // /// Быстро, но оперативе пизда
+    // /// </summary>
+    // private async void ConvertToPDFAsync(object sender, RoutedEventArgs e)
+    // {
+    //     var selectedItems = OutputFiles.SelectedItems.Cast<FilePathModel>().ToList();
+    //
+    //     var maxThreads = Environment.ProcessorCount;  
+    //     using (var semaphore = new SemaphoreSlim(maxThreads))
+    //     {
+    //         var tasks = selectedItems.Select(async selectedItem =>
+    //         {
+    //             await semaphore.WaitAsync();  
+    //             try
+    //             {
+    //                 selectedItem.PdfPath = selectedItem.WordPath.Replace(@"\Word\", @"\PDF\") + ".pdf";
+    //                 await Task.Run(() => WordExtensions.ConvertDocxToPdf(selectedItem.WordPath, selectedItem.PdfPath));
+    //             }
+    //             finally
+    //             {
+    //                 semaphore.Release();  
+    //             }
+    //         });
+    //         
+    //         await Task.WhenAll(tasks);
+    //     }
+    //
+    //     Console.WriteLine("Все элементы преобразованы в PDF.");
+    // }
 }
