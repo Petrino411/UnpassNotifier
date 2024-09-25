@@ -5,9 +5,6 @@ namespace UnpassNotifierDesktop.Classes.Extenstions;
 
 public static class ExcelExtensions
 {
-    private const int headerRow = 11;
-    private const int subHeaderRow = 12;
-
     public static async IAsyncEnumerable<(List<NotifyItem> items, string groupName)> ExcelParse(ExcelPackage package, HashSet<Discipline> disciplines)
     {
         foreach (var worksheet in package.Workbook.Worksheets)
