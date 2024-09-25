@@ -270,8 +270,9 @@ public partial class MainWindow : Window
         FillTemplate(fileDialog.FileName);
     }
 
-    private void RunBtn(object sender, RoutedEventArgs e)
+    private async void RunBtn(object sender, RoutedEventArgs e)
     {
+        // Проверка на выполнение задачи и корректность путей
         if (IsRunning
             || string.IsNullOrWhiteSpace(templatePath)
             || excelFiles.Count == 0
@@ -280,6 +281,14 @@ public partial class MainWindow : Window
             return;
         }
 
+        // Инициализация прогресс-бара
+        ProgressBar.Value = 0; 
+        ProgressBar.Maximum = excelFiles.Count; // Количество файлов = максимальное значение прогресса
+
+        // Очищаем поле вывода сообщений
+        StatusLabel.Content = "";
+        ProgressBar.Visibility = Visibility.Visible;
+
         tasks.Enqueue(Task.Run(async () =>
         {
             IsRunning = true;
@@ -287,17 +296,43 @@ public partial class MainWindow : Window
 
             var innerTasks = new List<Task>();
             Console.WriteLine("Запуск обработки Excel файлов");
+
+            // Переменная для отслеживания обработанных файлов
+            int processedFiles = 0;
+
             foreach (var excelFile in excelFiles)
             {
                 if (excelFile.FileName.Contains("~$")) continue;
-                innerTasks.Add(Task.Run(async () => { await WorkBody(excelFile); }));
+
+                innerTasks.Add(Task.Run(async () =>
+                {
+                    await WorkBody(excelFile);
+                
+                    // Обновление прогресс-бара после обработки каждого файла
+                    OutputFiles.Dispatcher.Invoke(() =>
+                    {
+                        processedFiles++;
+                        ProgressBar.Value = processedFiles; // Увеличение значения прогресса
+                    });
+                }));
             }
 
             await Task.WhenAll(innerTasks);
             IsRunning = false;
             Console.WriteLine("Конец обработки.");
+
+            // Обнуление прогресс-бара и вывод сообщения о завершении
+            await Task.Delay(2000); 
+            ProgressBar.Dispatcher.Invoke(() =>
+            {
+                ProgressBar.Value = 0; // Обнуляем прогресс-бар
+                ProgressBar.Visibility = Visibility.Collapsed;
+                StatusLabel.Content = "Создание файлов завершено!"; // Выводим сообщение
+            });
         }));
     }
+
+
 
     #endregion
 
@@ -308,18 +343,44 @@ public partial class MainWindow : Window
     
     private async void ConvertToPDF(object sender, RoutedEventArgs e)
     {
-        var selectedItems = OutputFiles.SelectedItems;
+        var selectedItems = OutputFiles.SelectedItems.Cast<FilePathModel>().ToList();
+    
+        // Обнуление прогресс-бара перед началом
+        ProgressBar1.Value = 0;
+        ProgressBar1.Maximum = selectedItems.Count; // Установим максимальное значение прогресс-бара
+        ProgressBar1.Visibility = Visibility.Visible;
+
+        StatusLabel1.Content = ""; // Сбрасываем статус перед началом обработки
+
         await Task.Run(() =>
         {
-            foreach (var selectedItem in selectedItems.Cast<FilePathModel>().ToList())
+            int processedFiles = 0; // Счетчик обработанных файлов
+
+            foreach (var selectedItem in selectedItems)
             {
                 selectedItem.PdfPath = selectedItem.WordPath.Replace(@"\Word\", @"\PDF\") + ".pdf";
                 WordExtensions.ConvertDocxToPdf(selectedItem.WordPath, selectedItem.PdfPath);
+
+                // Обновляем счетчик обработанных файлов
+                processedFiles++;
+
+                // Обновляем прогресс-бар
+                // Это нужно делать в UI-потоке
+                Dispatcher.Invoke(() =>
+                {
+                    ProgressBar1.Value = processedFiles;
+                });
             }
 
             Console.WriteLine("Элементы преобразованы в pdf.");
         });
+        await Task.Delay(2000); 
+        // Обновляем статус после завершения
+        StatusLabel1.Content = "Преобразование завершено!";
+        ProgressBar1.Value = 0; // Сбрасываем прогресс-бар
+        ProgressBar1.Visibility = Visibility.Collapsed;
     }
+    
     // /// <summary>
     // /// Быстро, но оперативе пизда
     // /// </summary>
