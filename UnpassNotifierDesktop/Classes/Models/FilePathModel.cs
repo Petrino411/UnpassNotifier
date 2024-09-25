@@ -4,23 +4,22 @@ namespace UnpassNotifierDesktop.Classes.Models;
 
 public class FilePathModel
 {
-    public string WordPath { get; }
     public string FileName { get; }
-    public string PdfPath { get; set; } = string.Empty;
+    public string FilePath { get; }
 
-    public FilePathModel(string wordPath)
+    public FilePathModel(string filePath)
     {
-        WordPath = wordPath;
-        FileName = Path.GetFileName(wordPath);
+        FilePath = filePath;
+        FileName = Path.GetFileName(filePath);
     }
 
-    public FilePathModel(string wordPath, string pdfPath) : this(wordPath)
+    public FileInfo GetFileInfo()
     {
-        PdfPath = pdfPath;
+        return new FileInfo(FilePath);
     }
 
     public override string ToString()
     {
-        return string.IsNullOrEmpty(PdfPath) ? FileName : $"{FileName} + PDF";
+        return FileName;
     }
 }

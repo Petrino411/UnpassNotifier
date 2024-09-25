@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using Spire.Doc;
 using UnpassNotifierDesktop.Classes.Models;
 using Xceed.Document.NET;
@@ -60,81 +62,75 @@ public static class WordExtensions
 
     #endregion
 
+    public static bool TemplateCheck(string? templatePath)
+    {
+        var document = DocX.Load(templatePath);
+        var isSuccess = document.Text.Contains("{{ФИО}}")
+                        && document.Text.Contains("{{дата}}")
+                        && document.Tables.FirstOrDefault() != null
+                        && document.Tables.First().Rows.Count == 2;
+        document.Dispose();
+        return isSuccess;
+    }
+
     #region Generator
 
-    public static async Task WordGenerate(List<NotifyItem> notifyItems, string outputDirectory, string templatePath,
-        ListView? outputFiles, Queue<Task> tasks)
+    public static void WordGenerate(List<NotifyItem> notifyItems, string outputDirectory, string templatePath,
+        ObservableCollection<WordFilePathModel> outputFiles, ListView outputFilesView, Queue<Task> tasks)
     {
         Directory.CreateDirectory(outputDirectory + @"\Word");
         Directory.CreateDirectory(outputDirectory + @"\PDF");
 
         foreach (var notifyItem in notifyItems)
         {
-            tasks.Enqueue( Task.Run(async () =>
+            tasks.Enqueue(Task.Run(() =>
             {
                 var currentWordPath = outputDirectory + @$"\Word\{notifyItem.FIO}.docx";
-                var currentPdfPath = outputDirectory + $@"\PDF\{notifyItem.FIO}.pdf";
-                // Открытие документа-шаблона
                 using var document = DocX.Load(templatePath);
 
                 // Подстановка данных в документ
                 document.ReplaceText("{{ФИО}}", notifyItem.FIO);
                 document.ReplaceText("{{дата}}", DateTime.Now.ToShortDateString());
-                // document.ReplaceText("{{период1}}", period1);
-                // document.ReplaceText("{{период2}}", period2);
 
-                var table = document.Tables.FirstOrDefault();
-                // Заполнение таблицы
-                if (table != null)
+                var table = document.Tables.First();
+                table.RemoveRow(1);
+
+                var smallFontFormat = new Formatting
                 {
-                    table.RemoveRow(1);
+                    Size = 11
+                };
 
-                    var smallFontFormat = new Formatting
-                    {
-                        Size = 11
-                    };
-
-                    for (var row = 1; row <= notifyItem.UnpassedList.Count; row++)
-                    {
-                        table.InsertRow();
-                        table.Rows[row].Cells[0].Paragraphs[0]
-                            .Append($"{row}.", smallFontFormat);
-                        table.Rows[row].Cells[1].Paragraphs[0]
-                            .Append($"{notifyItem.UnpassedList[row - 1].Discipline.DisciplineName}", smallFontFormat);
-                        table.Rows[row].Cells[2].Paragraphs[0]
-                            .Append($"{notifyItem.UnpassedList[row - 1].Discipline.TypeControl}", smallFontFormat);
-                        table.Rows[row].Cells[3].Paragraphs[0]
-                            .Append($"{notifyItem.UnpassedList[row - 1].Discipline.AttestationDate}", smallFontFormat);
-                        table.Rows[row].Cells[4].Paragraphs[0]
-                            .Append($"{notifyItem.UnpassedList[row - 1].ControlResult}", smallFontFormat);
-                    }
+                for (var row = 1; row <= notifyItem.UnpassedList.Count; row++)
+                {
+                    table.InsertRow();
+                    table.Rows[row].Cells[0].Paragraphs[0]
+                        .Append($"{row}.", smallFontFormat);
+                    table.Rows[row].Cells[1].Paragraphs[0]
+                        .Append($"{notifyItem.UnpassedList[row - 1].Discipline.DisciplineName}", smallFontFormat);
+                    table.Rows[row].Cells[2].Paragraphs[0]
+                        .Append($"{notifyItem.UnpassedList[row - 1].Discipline.TypeControl}", smallFontFormat);
+                    table.Rows[row].Cells[3].Paragraphs[0]
+                        .Append($"{notifyItem.UnpassedList[row - 1].Discipline.AttestationDate}", smallFontFormat);
+                    table.Rows[row].Cells[4].Paragraphs[0]
+                        .Append($"{notifyItem.UnpassedList[row - 1].ControlResult}", smallFontFormat);
                 }
+
 
                 Console.WriteLine($"Завершение создания {currentWordPath}");
                 document.SaveAs(currentWordPath);
 
-                // var hasPdf = await ConvertDocxToPdf(currentWordPath, currentPdfPath);
-                //
-                // outputFiles?.Dispatcher.InvokeAsync(() =>
-                // {
-                //     outputFiles.Items.Add(hasPdf
-                //         ? new FilePathModel(currentWordPath, currentPdfPath)
-                //         : new FilePathModel(currentWordPath));
-                // });
-                
-                outputFiles?.Dispatcher.InvokeAsync(() =>
+                outputFilesView.Dispatcher.Invoke(() =>
                 {
-                    outputFiles.Items.Add(new FilePathModel(currentWordPath));
+                    outputFiles.Add(new WordFilePathModel(currentWordPath));
+                    outputFilesView.Items.Refresh();
                 });
-                
             }));
         }
-        
     }
 
     #endregion
 
-    public static async Task<bool> ConvertDocxToPdf(string inputFile, string outputFile)
+    public static bool ConvertDocxToPdf(string inputFile, string outputFile)
     {
         try
         {

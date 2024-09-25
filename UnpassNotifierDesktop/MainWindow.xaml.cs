@@ -8,6 +8,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using Microsoft.Win32;
+using OfficeOpenXml;
+using UnpassNotifierDesktop.Classes;
 using UnpassNotifierDesktop.Classes.Extenstions;
 using UnpassNotifierDesktop.Classes.Models;
 
@@ -19,58 +21,32 @@ namespace UnpassNotifierDesktop;
 /// </summary>
 public partial class MainWindow : Window
 {
-    private ObservableCollection<FilePathModel> sheduleFiles { get; } = [];
-    private ObservableCollection<FilePathModel> excelFiles { get; } = [];
-    private string resultsDirectory { get; }
-    private string resourcesDirectory { get; }
-    private static Queue<Task> tasks { get; } = new();
-    private bool IsRunning = false;
-    private string templatePath { get; set; }
+    private string ResultsDirectory { get; }
+    private string ResourcesDirectory { get; }
+    private bool IsRunning { get; set; }
+    private FilePathModel? TemplateFile { get; set; }
+    private FilePathModel? ScheduleFile { get; set; }
+    private FilePathModel? StatementFile { get; set; }
+    private ObservableCollection<WordFilePathModel> OutputFiles { get; set; } = [];
 
     public MainWindow()
     {
         InitializeComponent();
 
         var directories = Directory.GetDirectories(Environment.CurrentDirectory);
-        resourcesDirectory = directories.FirstOrDefault(x => x.Contains("Resources")) ??
+        ResourcesDirectory = directories.FirstOrDefault(x => x.Contains("Resources")) ??
                              Directory.CreateDirectory(Environment.CurrentDirectory + @"\Resources").FullName;
-        resultsDirectory = directories.FirstOrDefault(x => x.Contains("Result"))
+        ResultsDirectory = directories.FirstOrDefault(x => x.Contains("Result"))
                            ?? Directory.CreateDirectory(Environment.CurrentDirectory + @"\Result").FullName;
 
-        if (!resourcesDirectory.Contains("Word"))
-        {
-            Directory.CreateDirectory(resourcesDirectory + @"\Word");
-        }
-
-        if (!resourcesDirectory.Contains("Excel"))
-        {
-            Directory.CreateDirectory(resourcesDirectory + @"\Excel");
-        }
-
-        ExcelFilesListView.KeyDown += RemoveOnKeyDown(excelFiles);
-        WordFilesListView.KeyDown += RemoveOnKeyDown(sheduleFiles);
-        TemplateListView.KeyDown += RemoveOnKeyDown();
-        ExcelFilesListView.MouseDoubleClick += OpenOnMouseDoubleClick;
-        WordFilesListView.MouseDoubleClick += OpenOnMouseDoubleClick;
-        TemplateListView.MouseDoubleClick += OpenOnMouseDoubleClick;
-        OutputFiles.MouseDoubleClick += OpenOnMouseDoubleClick;
-
-        ExcelFilesListView.ItemsSource = excelFiles;
-        WordFilesListView.ItemsSource = sheduleFiles;
-
-        FillSheduleFiles(Directory
-            .GetFiles(resourcesDirectory + @"\Word", "*.docx", SearchOption.AllDirectories)
-            .Select(x => new FilePathModel(x))
-            .ToList()
-        );
-        FillExcelFiles(Directory
-            .GetFiles(resourcesDirectory + @"\Excel", "*.xlsx", SearchOption.AllDirectories)
-            .Select(x => new FilePathModel(x))
-            .ToList()
-        );
-        FillTemplate(Directory.GetFiles(resourcesDirectory, "*.docx", SearchOption.AllDirectories)
-            .FirstOrDefault(x => x.Contains("УВЕДОМЛЕНИЕ")));
+        OutputFilesView.ItemsSource = OutputFiles;
+        StatementFileLabel.MouseDoubleClick += OpenOnMouseDoubleClick;
+        ScheduleFileLabel.MouseDoubleClick += OpenOnMouseDoubleClick;
+        TemplateFileLabel.MouseDoubleClick += OpenOnMouseDoubleClick;
+        OutputFilesView.MouseDoubleClick += OpenOnMouseDoubleClick;
     }
+
+    #region InteractionEvents
 
     private static void OpenOnMouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
@@ -79,7 +55,7 @@ public partial class MainWindow : Window
             if (sender is not ListView listView) return;
 
             var obj = listView.SelectedItem;
-            if (obj is not FilePathModel filePathModel)
+            if (obj is not WordFilePathModel filePathModel)
             {
                 Console.WriteLine("Кажется, это не файл....");
                 return;
@@ -89,14 +65,16 @@ public partial class MainWindow : Window
             {
                 Process.Start(new ProcessStartInfo(filePathModel.PdfPath)
                 {
-                    UseShellExecute = true
+                    UseShellExecute = true,
                 });
+                return;
             }
 
             Process.Start(new ProcessStartInfo(filePathModel.WordPath)
             {
-                UseShellExecute = true
+                UseShellExecute = true,
             });
+            return;
         }
         catch (Exception exception)
         {
@@ -104,128 +82,65 @@ public partial class MainWindow : Window
         }
     }
 
-    private static KeyEventHandler RemoveOnKeyDown(ObservableCollection<FilePathModel> collection)
+    // protected override void OnClosing(CancelEventArgs e)
+    // {
+    //     if (Tasks.Count(x => x.IsCompleted) < Tasks.Count)
+    //     {
+    //         MessageBox.Show("Кажется, висит несколько задач. Подождите завершения их выполнения.");
+    //         e.Cancel = true;
+    //         return;
+    //     }
+    //
+    //     base.OnClosing(e);
+    // }
+
+    #endregion
+
+    private async Task<bool> WorkBody(FilePathModel scheduleFile, ExcelPackage excelPackage, ProgressBar progressBar)
     {
-        return (sender, args) =>
-        {
-            if (sender is not ListView listView) return;
-            if (args.Key is not (Key.Delete or Key.Back)) return;
-
-            var array = new FilePathModel[listView.Items.Count];
-            listView.SelectedItems.CopyTo(array, 0);
-            foreach (var item in array)
-            {
-                collection.Remove(item);
-            }
-        };
-    }
-
-    private static KeyEventHandler RemoveOnKeyDown()
-    {
-        return (sender, args) =>
-        {
-            if (sender is not ListView listView) return;
-            if (args.Key is not (Key.Delete or Key.Back)) return;
-
-            var array = new FilePathModel[listView.Items.Count];
-            listView.SelectedItems.CopyTo(array, 0);
-            foreach (var item in array)
-            {
-                listView.Dispatcher.Invoke(() => { listView.Items.Remove(item); });
-            }
-        };
-    }
-
-    protected override void OnClosing(CancelEventArgs e)
-    {
-        if (tasks.Count(x => x.IsCompleted) < tasks.Count)
-        {
-            MessageBox.Show("Кажется, висит несколько задач. Подождите завершения их выполнения.");
-            e.Cancel = true;
-            return;
-        }
-
-        base.OnClosing(e);
-    }
-
-    private void FillSheduleFiles(List<FilePathModel>? FilePaths)
-    {
-        if (FilePaths == null || FilePaths.Count == 0)
-        {
-            sheduleFiles.Clear();
-            Console.WriteLine("Нет графиков в папке Word");
-            return;
-        }
-
-        foreach (var filePathModel in FilePaths)
-        {
-            sheduleFiles.Add(filePathModel);
-        }
-    }
-
-    private void FillExcelFiles(List<FilePathModel>? FilePaths)
-    {
-        if (FilePaths == null || FilePaths.Count == 0)
-        {
-            excelFiles.Clear();
-            Console.WriteLine("Нет ведомостей в папке Excel");
-            return;
-        }
-
-        foreach (var filePathModel in FilePaths)
-        {
-            excelFiles.Add(filePathModel);
-        }
-    }
-
-    private void FillTemplate(string? templatePath)
-    {
-        if (templatePath == null)
-        {
-            this.templatePath = string.Empty;
-            TemplateListView.Items.Clear();
-            Console.WriteLine("Нет шаблона уведомлений в папке Resources");
-            return;
-        }
-
-        this.templatePath = templatePath;
-        TemplateListView.Items.Add(new FilePathModel(templatePath));
-        Console.WriteLine($"Выбран файл шаблона уведомления: {templatePath}");
-    }
-
-    private async Task WorkBody(FilePathModel excelFile)
-    {
-        var groupName = excelFile.FileName.Split('.').First();
         try
         {
-            var wordFilePath = sheduleFiles.FirstOrDefault(x => x.WordPath.Contains(groupName));
-            var disciplines = await WordExtensions.DisciplinesAttestationFill(wordFilePath.WordPath);
+            var disciplines = await WordExtensions.DisciplinesAttestationFill(scheduleFile.FilePath);
+            if (disciplines == null) return false;
+            try
+            {
+                var tasks = new Queue<Task>();
 
-            var notifies = await ExcelExtensions.ExcelParse(excelFile.WordPath, disciplines);
+                await foreach (var (items, groupName) in ExcelExtensions.ExcelParse(excelPackage, disciplines))
+                {
+                    var targetFile = $@"{groupName} - {DateTime.Now.ToShortDateString()}";
+                    var outputDirectory = Directory.CreateDirectory(ResultsDirectory + @$"\{targetFile}").FullName;
 
-            var targetFile = groupName + $@" - {DateTime.Now.ToShortDateString()}";
-            var outputDirectory = Directory.CreateDirectory(resultsDirectory + @$"\{targetFile}").FullName;
+                    Console.WriteLine($"Создание Word уведомлений для {groupName}");
+                    WordExtensions.WordGenerate(items, outputDirectory,
+                        TemplateFile!.FilePath, OutputFiles,
+                        OutputFilesView, tasks);
+                    progressBar.Dispatcher.InvokeAsync(() => { progressBar.Value++; });
+                }
 
-            Console.WriteLine($"Создание Word уведомлений для {groupName}");
-            await WordExtensions.WordGenerate(notifies, outputDirectory, templatePath, OutputFiles, tasks);
+                await Task.WhenAll(tasks);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Произошла ошибка, {e.Message}");
+                return false;
+            }
+
+            return true;
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Невозможно обработать: {groupName}. Файла либо нет, либо произошла ошибка.");
-            // OutputFiles.Items.Add($"{groupName} не сформирован(пропущено)");
-            return;
+            Console.WriteLine($"Произошла ошибка при извлечении периодов из {scheduleFile.FilePath}: {e.Message}");
+            return false;
         }
     }
 
     #region Buttons
 
-    private void SelectShedulesBtn(object sender, RoutedEventArgs e)
+    private void SelectScheduleBtn(object sender, RoutedEventArgs e)
     {
         var fileDialog = new OpenFileDialog
         {
-#if DEBUG
-            InitialDirectory = resourcesDirectory + @"\Word",
-#endif
             Multiselect = true,
             Filter = "Графики аттестации|*.docx|All Files|*.*",
             Title = "Выберите файлы"
@@ -233,17 +148,14 @@ public partial class MainWindow : Window
 
         if (fileDialog.ShowDialog() != true) return;
 
-        sheduleFiles.Clear();
-        FillSheduleFiles(fileDialog.FileNames.Select(x => new FilePathModel(x)).ToList());
+        ScheduleFile = new FilePathModel(fileDialog.FileName);
+        ScheduleFileLabel.Content = ScheduleFile;
     }
 
-    private void SelectAttestationsBtn(object sender, RoutedEventArgs e)
+    private void SelectAttestationBtn(object sender, RoutedEventArgs e)
     {
         var fileDialog = new OpenFileDialog
         {
-#if DEBUG
-            InitialDirectory = resourcesDirectory + @"\Excel",
-#endif
             Multiselect = true,
             Filter = "Сводные ведомости|*.xlsx|All Files|*.*",
             Title = "Выберите файлы"
@@ -251,8 +163,8 @@ public partial class MainWindow : Window
 
         if (fileDialog.ShowDialog() != true) return;
 
-        excelFiles.Clear();
-        FillExcelFiles(fileDialog.FileNames.Select(x => new FilePathModel(x)).ToList());
+        StatementFile = new FilePathModel(fileDialog.FileName);
+        StatementFileLabel.Content = StatementFile;
     }
 
     private void SelectTemplateBtn(object sender, RoutedEventArgs e)
@@ -260,7 +172,7 @@ public partial class MainWindow : Window
         var fileDialog = new OpenFileDialog
         {
 #if DEBUG
-            InitialDirectory = resourcesDirectory,
+            InitialDirectory = ResourcesDirectory,
 #endif
             Filter = "Шаблон уведомления|*.docx|All Files|*.*",
             Title = "Выберите файлы"
@@ -268,150 +180,178 @@ public partial class MainWindow : Window
 
         if (fileDialog.ShowDialog() != true) return;
 
-        FillTemplate(fileDialog.FileName);
+
+        if (!WordExtensions.TemplateCheck(fileDialog.FileName))
+        {
+            MessageBox.Show("Файл должен содержать {{ФИО}}, {{дата}} и таблицу с 2 строками");
+            return;
+        }
+
+        TemplateFile = new FilePathModel(fileDialog.FileName);
+        TemplateFileLabel.Content = TemplateFile;
     }
 
     private async void RunBtn(object sender, RoutedEventArgs e)
     {
         // Проверка на выполнение задачи и корректность путей
         if (IsRunning
-            || string.IsNullOrWhiteSpace(templatePath)
-            || excelFiles.Count == 0
-            || sheduleFiles.Count == 0)
+            || TemplateFile == null
+            || StatementFile == null
+            || ScheduleFile == null)
         {
+            MessageBox.Show("Какой-то из файлов не выбран или другая задача уже запущена");
             return;
         }
 
-        // Инициализация прогресс-бара
-        ProgressBar.Value = 0; 
-        ProgressBar.Maximum = excelFiles.Count; // Количество файлов = максимальное значение прогресса
+        IsRunning = true;
+        OutputFiles.Clear();
 
-        // Очищаем поле вывода сообщений
-        StatusLabel.Content = "";
-        ProgressBar.Visibility = Visibility.Visible;
+        using var package = new ExcelPackage(StatementFile.GetFileInfo());
 
-        tasks.Enqueue(Task.Run(async () =>
-        {
-            IsRunning = true;
-            OutputFiles.Dispatcher.Invoke(() => { OutputFiles.Items.Clear(); });
+        var tasks = new Queue<Task>();
 
-            var innerTasks = new List<Task>();
-            Console.WriteLine("Запуск обработки Excel файлов");
+        ProgressBarParse.Value = 0;
+        ProgressBarParse.Maximum = package.Workbook.Worksheets.Count;
+        ParseStatusLabel.Content = "";
+        ProgressBarParse.Visibility = Visibility.Visible;
 
-            // Переменная для отслеживания обработанных файлов
-            int processedFiles = 0;
+        Console.WriteLine("Начата обработка");
+        tasks.Enqueue(Task.Run(async () => { await WorkBody(ScheduleFile, package, ProgressBarParse); }));
 
-            foreach (var excelFile in excelFiles)
-            {
-                if (excelFile.FileName.Contains("~$")) continue;
+        await Task.WhenAll(tasks);
+        
+        ParseStatusLabel.Content = "Создание файлов завершено!";
+        ProgressBarParse.Visibility = Visibility.Collapsed;
+        ProgressBarParse.Value = 0;
+        
+        Console.WriteLine("Обработка завершена");
+        IsRunning = false;
 
-                innerTasks.Add(Task.Run(async () =>
-                {
-                    await WorkBody(excelFile);
-                
-                    // Обновление прогресс-бара после обработки каждого файла
-                    OutputFiles.Dispatcher.Invoke(() =>
-                    {
-                        processedFiles++;
-                        ProgressBar.Value = processedFiles; // Увеличение значения прогресса
-                    });
-                }));
-            }
-
-            await Task.WhenAll(innerTasks);
-            IsRunning = false;
-            Console.WriteLine("Конец обработки.");
-
-            // Обнуление прогресс-бара и вывод сообщения о завершении
-            await Task.Delay(2000); 
-            ProgressBar.Dispatcher.Invoke(() =>
-            {
-                ProgressBar.Value = 0; // Обнуляем прогресс-бар
-                ProgressBar.Visibility = Visibility.Collapsed;
-                StatusLabel.Content = "Создание файлов завершено!"; // Выводим сообщение
-            });
-        }));
     }
-
-
 
     #endregion
 
-    private void OutputFiles_OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        OutputFiles.ContextMenu.IsOpen = true;
-    }
+    // private void OutputFiles_OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+    // {
+    //     OutputFilesView.ContextMenu!.IsOpen = true;
+    // }
 
-    private async void ConvertToPDF(object sender, RoutedEventArgs e)
+    private async void ConvertToPdf(object sender, RoutedEventArgs e)
     {
-        var selectedItems = OutputFiles.SelectedItems.Cast<FilePathModel>().ToList();
-    
+        if (IsRunning)
+        {
+            MessageBox.Show("Какая-то задача уже запущена. Пожалуйста, подождите.");
+            return;
+        }
+
+        IsRunning = true;
+        var selectedItems = OutputFilesView.SelectedItems.Cast<WordFilePathModel>().ToList();
+
         // Обнуление прогресс-бара перед началом
-        ProgressBar1.Value = 0;
-        ProgressBar1.Maximum = selectedItems.Count; // Установим максимальное значение прогресс-бара
-        ProgressBar1.Visibility = Visibility.Visible;
-
-        StatusLabel1.Content = ""; // Сбрасываем статус перед началом обработки
+        PdfProgressBar.Value = 0;
+        PdfProgressBar.Maximum = selectedItems.Count;
+        PdfStatusLabel.Content = "";
+        PdfProgressBar.Visibility = Visibility.Visible;
 
         await Task.Run(() =>
         {
-            int processedFiles = 0; // Счетчик обработанных файлов
-
+            // Счетчик обработанных файлов
             foreach (var selectedItem in selectedItems)
             {
                 selectedItem.PdfPath = selectedItem.WordPath.Replace(@"\Word\", @"\PDF\") + ".pdf";
 
-                _ = WordExtensions.ConvertDocxToPdf(selectedItem.WordPath, selectedItem.PdfPath);
+                var isSuccess = WordExtensions.ConvertDocxToPdf(selectedItem.WordPath, selectedItem.PdfPath);
 
-                // Обновляем счетчик обработанных файлов
-                processedFiles++;
-
-                // Обновляем прогресс-бар
-                // Это нужно делать в UI-потоке
-                Dispatcher.Invoke(() =>
+                if (isSuccess)
                 {
-                    ProgressBar1.Value = processedFiles;
-                    OutputFiles.Items.Refresh();
-                });
+                    // Обновляем прогресс-бар
+                    // Это нужно делать в UI-потоке
+                    Dispatcher.Invoke(() =>
+                    {
+                        PdfProgressBar.Value++;
+                        OutputFilesView.Items.Refresh();
+                    });
+                }
             }
 
             Console.WriteLine("Элементы преобразованы в pdf.");
         });
-        await Task.Delay(2000); 
+
         // Обновляем статус после завершения
-        StatusLabel1.Content = "Преобразование завершено!";
-        ProgressBar1.Value = 0; // Сбрасываем прогресс-бар
-        ProgressBar1.Visibility = Visibility.Collapsed;
+        PdfStatusLabel.Content = "Преобразование завершено!";
+        IsRunning = false;
+        await Task.Run(() =>
+        {
+            PdfProgressBar.Dispatcher.InvokeAsync(() =>
+            {
+                PdfProgressBar.Visibility = Visibility.Collapsed;
+                PdfProgressBar.Value = 0;
+            });
+        });
     }
 
-    
-    // /// <summary>
-    // /// Быстро, но оперативе пизда
-    // /// </summary>
-    // private async void ConvertToPDFAsync(object sender, RoutedEventArgs e)
-    // {
-    //     var selectedItems = OutputFiles.SelectedItems.Cast<FilePathModel>().ToList();
-    //
-    //     var maxThreads = Environment.ProcessorCount;  
-    //     using (var semaphore = new SemaphoreSlim(maxThreads))
-    //     {
-    //         var tasks = selectedItems.Select(async selectedItem =>
-    //         {
-    //             await semaphore.WaitAsync();  
-    //             try
-    //             {
-    //                 selectedItem.PdfPath = selectedItem.WordPath.Replace(@"\Word\", @"\PDF\") + ".pdf";
-    //                 await Task.Run(() => WordExtensions.ConvertDocxToPdf(selectedItem.WordPath, selectedItem.PdfPath));
-    //             }
-    //             finally
-    //             {
-    //                 semaphore.Release();  
-    //             }
-    //         });
-    //         
-    //         await Task.WhenAll(tasks);
-    //     }
-    //
-    //     Console.WriteLine("Все элементы преобразованы в PDF.");
-    // }
+    #region ClearPaths
+
+    private void TemplateClear_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (IsRunning)
+        {
+            MessageBox.Show("В данный момент изменение невозможно");
+            return;
+        }
+
+        TemplateFile = null;
+        TemplateFileLabel.Content = "";
+    }
+
+    private void ScheduleClear_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (IsRunning)
+        {
+            MessageBox.Show("В данный момент изменение невозможно");
+            return;
+        }
+
+        ScheduleFile = null;
+        ScheduleFileLabel.Content = "";
+    }
+
+    private void StatementClear_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (IsRunning)
+        {
+            MessageBox.Show("В данный момент изменение невозможно");
+            return;
+        }
+
+        StatementFile = null;
+        StatementFileLabel.Content = "";
+    }
+
+    #endregion
+
+    private void OpenPdf_OnClick(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var obj = OutputFilesView.SelectedItem;
+            if (obj is not WordFilePathModel filePathModel)
+            {
+                Console.WriteLine("Кажется, это не файл....");
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(filePathModel.PdfPath))
+            {
+                Process.Start(new ProcessStartInfo(filePathModel.PdfPath)
+                {
+                    UseShellExecute = true,
+                });
+            }
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine("Не удалось открыть файл");
+        }
+    }
 }
