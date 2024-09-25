@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Publish UnpassNotifierDesktop" type="DotNetFolderPublish" factoryName="Publish to folder">
+    <riderPublish configuration="Release" platform="Any CPU" produce_single_file="true" runtime="win-x64" self_contained="true" target_folder="$PROJECT_DIR$/Publish" target_framework="net8.0-windows" uuid_high="-7320485005692679913" uuid_low="-7451297957246408632" />
+    <method v="2" />
+  </configuration>
+</component>

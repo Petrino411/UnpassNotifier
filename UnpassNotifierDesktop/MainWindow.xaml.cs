@@ -6,6 +6,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
 using Microsoft.Win32;
 using UnpassNotifierDesktop.Classes.Extenstions;
 using UnpassNotifierDesktop.Classes.Models;
@@ -29,22 +30,23 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        
+
         var directories = Directory.GetDirectories(Environment.CurrentDirectory);
         resourcesDirectory = directories.FirstOrDefault(x => x.Contains("Resources")) ??
                              Directory.CreateDirectory(Environment.CurrentDirectory + @"\Resources").FullName;
         resultsDirectory = directories.FirstOrDefault(x => x.Contains("Result"))
                            ?? Directory.CreateDirectory(Environment.CurrentDirectory + @"\Result").FullName;
-        
+
         if (!resourcesDirectory.Contains("Word"))
         {
             Directory.CreateDirectory(resourcesDirectory + @"\Word");
         }
+
         if (!resourcesDirectory.Contains("Excel"))
         {
             Directory.CreateDirectory(resourcesDirectory + @"\Excel");
         }
-        
+
         ExcelFilesListView.KeyDown += RemoveOnKeyDown(excelFiles);
         WordFilesListView.KeyDown += RemoveOnKeyDown(sheduleFiles);
         TemplateListView.KeyDown += RemoveOnKeyDown();
@@ -55,7 +57,7 @@ public partial class MainWindow : Window
 
         ExcelFilesListView.ItemsSource = excelFiles;
         WordFilesListView.ItemsSource = sheduleFiles;
-        
+
         FillSheduleFiles(Directory
             .GetFiles(resourcesDirectory + @"\Word", "*.docx", SearchOption.AllDirectories)
             .Select(x => new FilePathModel(x))
@@ -68,7 +70,6 @@ public partial class MainWindow : Window
         );
         FillTemplate(Directory.GetFiles(resourcesDirectory, "*.docx", SearchOption.AllDirectories)
             .FirstOrDefault(x => x.Contains("УВЕДОМЛЕНИЕ")));
-
     }
 
     private static void OpenOnMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -91,7 +92,7 @@ public partial class MainWindow : Window
                     UseShellExecute = true
                 });
             }
-            
+
             Process.Start(new ProcessStartInfo(filePathModel.WordPath)
             {
                 UseShellExecute = true
@@ -340,7 +341,7 @@ public partial class MainWindow : Window
     {
         OutputFiles.ContextMenu.IsOpen = true;
     }
-    
+
     private async void ConvertToPDF(object sender, RoutedEventArgs e)
     {
         var selectedItems = OutputFiles.SelectedItems.Cast<FilePathModel>().ToList();
@@ -359,7 +360,8 @@ public partial class MainWindow : Window
             foreach (var selectedItem in selectedItems)
             {
                 selectedItem.PdfPath = selectedItem.WordPath.Replace(@"\Word\", @"\PDF\") + ".pdf";
-                WordExtensions.ConvertDocxToPdf(selectedItem.WordPath, selectedItem.PdfPath);
+
+                _ = WordExtensions.ConvertDocxToPdf(selectedItem.WordPath, selectedItem.PdfPath);
 
                 // Обновляем счетчик обработанных файлов
                 processedFiles++;
@@ -369,6 +371,7 @@ public partial class MainWindow : Window
                 Dispatcher.Invoke(() =>
                 {
                     ProgressBar1.Value = processedFiles;
+                    OutputFiles.Items.Refresh();
                 });
             }
 
@@ -380,6 +383,7 @@ public partial class MainWindow : Window
         ProgressBar1.Value = 0; // Сбрасываем прогресс-бар
         ProgressBar1.Visibility = Visibility.Collapsed;
     }
+
     
     // /// <summary>
     // /// Быстро, но оперативе пизда
