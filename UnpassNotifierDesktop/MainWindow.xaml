@@ -122,8 +122,8 @@
                                   BorderBrush="Black" VerticalAlignment="Stretch">
                             <ListView.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Header="Преобразовать в pdf" Click="ConvertToPdf" />
-                                    <MenuItem Header="Открыть в pdf" Click="OpenPdf_OnClick" />
+                                    <MenuItem Header="Преобразовать в PDF" Click="ConvertToPdf" />
+                                    <MenuItem Header="Открыть в PDF" Click="OpenPdf_OnClick" />
                                 </ContextMenu>
                             </ListView.ContextMenu>
                         </ListView>

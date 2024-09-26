@@ -13,7 +13,6 @@ using OfficeOpenXml;
 using UnpassNotifierDesktop.Classes;
 using UnpassNotifierDesktop.Classes.Extenstions;
 using UnpassNotifierDesktop.Classes.Models;
-
 using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Windows;
@@ -50,16 +49,15 @@ public partial class MainWindow : Window
         ScheduleFileLabel.MouseDoubleClick += OpenOnMouseDoubleClick;
         TemplateFileLabel.MouseDoubleClick += OpenOnMouseDoubleClick;
         OutputFilesView.MouseDoubleClick += OpenOnMouseDoubleClick;
-        
-        
+
+
         string ver = Assembly.GetExecutingAssembly().GetName().Version.ToString();
         MyMenuItem versionMenuItem = new MyMenuItem { Title = "Version " + ver };
 
         Windows.Add(versionMenuItem);
     }
-    
-    
-    
+
+
     public ObservableCollection<MyMenuItem> Windows
     {
         get { return _windows; }
@@ -239,14 +237,13 @@ public partial class MainWindow : Window
         tasks.Enqueue(Task.Run(async () => { await WorkBody(ScheduleFile, package, ProgressBarParse); }));
 
         await Task.WhenAll(tasks);
-        
+
         ParseStatusLabel.Content = "Создание файлов завершено!";
         ProgressBarParse.Visibility = Visibility.Collapsed;
         ProgressBarParse.Value = 0;
-        
+
         Console.WriteLine("Обработка завершена");
         IsRunning = false;
-
     }
 
     #endregion
@@ -367,13 +364,17 @@ public partial class MainWindow : Window
                 {
                     UseShellExecute = true,
                 });
+                return;
             }
+
+            MessageBox.Show("Для этого файла ещё нет PDF варианта");
         }
         catch (Exception exception)
         {
             Console.WriteLine("Не удалось открыть файл");
         }
     }
+
     public class MyMenuItem
     {
         public string Title { get; set; }
