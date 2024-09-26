@@ -6,145 +6,171 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Height="620" Title="UnpassNotifier" Width="900" Background="White" ResizeMode="CanMinimize">
-    <Grid Margin="10">
+
+
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" MaxHeight="500" />
-            <RowDefinition Height="80" />
+            <RowDefinition Height="20"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-
-        <!-- Верхняя часть интерфейса с файлами и шаблонами -->
-        <Grid Grid.Row="0" Margin="10" Height="480">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition MinWidth="400" Width="Auto" />
-                <ColumnDefinition MinWidth="400" Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-
-            <Grid Grid.Column="0" Margin="10" Height="450">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                </Grid.RowDefinitions>
-
-                <!-- Секция шаблона -->
-                <Grid Grid.Row="0" Margin="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Content="Выбранный шаблон" FontWeight="Bold" FontSize="14" />
-                    <Label Grid.Row="1" Height="50" Name="TemplateFileLabel" BorderBrush="Black" BorderThickness="2" />
-                    <Button Grid.Row="2" Height="30" Click="SelectTemplateBtn" HorizontalAlignment="Right"
-                            Content="Выбрать файл шаблона" Width="180" Margin="10"
-                            Background="LightBlue" />
-                    <Button Grid.Row="2" Height="30" HorizontalAlignment="Left"
-                            Content="Очистить" Width="80" Click="TemplateClear_OnClick"
-                            Background="Bisque" />
-                </Grid>
-
-                <!-- Секция файлов графиков -->
-                <Grid Grid.Row="1" Margin="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Content="Файлы графиков" FontWeight="Bold" FontSize="14" />
-                    <Label Grid.Row="1" Height="50" Name="ScheduleFileLabel" BorderBrush="Black" BorderThickness="2" />
-                    <Button Grid.Row="2" Height="30" Click="SelectScheduleBtn" HorizontalAlignment="Right"
-                            Content="Выбрать файлы графиков" Width="180" Margin="10"
-                            Background="LightBlue" />
-                    <Button Grid.Row="2" Height="30" HorizontalAlignment="Left"
-                            Content="Очистить" Width="80" Click="ScheduleClear_OnClick"
-                            Background="Bisque" />
-                </Grid>
-
-                <!-- Секция файлов аттестации -->
-                <Grid Grid.Row="2" Margin="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Content="Файлы аттестации" FontWeight="Bold" FontSize="14" />
-                    <Label Grid.Row="1" Name="StatementFileLabel" BorderBrush="Black" Height="50" BorderThickness="2" />
-                    <Button Grid.Row="2" Height="30" Click="SelectAttestationBtn" HorizontalAlignment="Right"
-                            Content="Выбрать файлы аттестации" Width="180" Margin="10"
-                            Background="LightBlue" />
-                    <Button Grid.Row="2" Height="30" HorizontalAlignment="Left"
-                            Content="Очистить" Width="80" Click="StatementClear_OnClick"
-                            Background="Bisque" />
-                </Grid>
-            </Grid>
-
-            <!-- Выходные файлы -->
-            <Grid Grid.Column="1" Grid.Row="0" Margin="5" Height="450">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="100"></RowDefinition>
-                </Grid.RowDefinitions>
-
-                <Grid Grid.Row="0" Margin="5">
-                    <Grid.RowDefinitions>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                    </Grid.RowDefinitions>
-
-                    <Label Grid.Row="0" Content="Выходные файлы"
-                           FontWeight="Bold" FontSize="14"
-                           HorizontalAlignment="Center" />
-
-                    <ListView Grid.Row="1" Name="OutputFilesView" Height="300"
-                              BorderBrush="Black" VerticalAlignment="Stretch">
-                        <ListView.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Преобразовать в pdf" Click="ConvertToPdf" />
-                                <MenuItem Header="Открыть в pdf" Click="OpenPdf_OnClick" />
-                            </ContextMenu>
-                        </ListView.ContextMenu>
-                    </ListView>
-                </Grid>
-
-                <StackPanel Grid.Row="1" MinHeight="100" Margin="5">
-                    <ProgressBar Name="PdfProgressBar" Height="20" Margin="5" Minimum="0"
-                                 Maximum="100" Value="0" Foreground="YellowGreen" Visibility="Collapsed"
-                                 Background="LightGray" Orientation="Horizontal" />
-                    <Label Name="PdfStatusLabel" Content="" HorizontalAlignment="Right"
-                           VerticalAlignment="Bottom" FontSize="12" FontWeight="Bold" Foreground="DarkGreen" Margin="5" />
-                </StackPanel>
-            </Grid>
-        </Grid>
+        <Menu Height="24" VerticalAlignment="Top">
+            <MenuItem Header="Меню">
+                <MenuItem.ItemsSource>
+                    <CompositeCollection>
+                        <MenuItem Header="О программе" />
+                        <MenuItem Header="Помощь" />
+                    </CompositeCollection>
+                </MenuItem.ItemsSource>
+            </MenuItem>
+        </Menu>
 
 
-        <!-- Нижняя панель -->
-        <Grid Grid.Row="1" VerticalAlignment="Top">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="700" />
-                <ColumnDefinition Width="150" />
-            </Grid.ColumnDefinitions>
+        <Grid Grid.Row="1" Margin="10">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto" MaxHeight="500" />
+                <RowDefinition Height="80" />
             </Grid.RowDefinitions>
 
-
-            <!-- Прогресс-бар -->
-            <ProgressBar Grid.Column="0" Name="ProgressBarParse" Height="30" Width="700"
-                         Minimum="0" Maximum="100" Value="0" Visibility="Collapsed"
-                         HorizontalContentAlignment="Right"
-                         Foreground="YellowGreen" Background="LightGray" />
-
-            <Label Grid.Column="0" Name="ParseStatusLabel" Content="" Width="700"
-                   HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="30"
-                   HorizontalContentAlignment="Right"
-                   FontSize="12" FontWeight="Bold" Foreground="DarkGreen" />
+            <!-- Верхняя часть интерфейса с файлами и шаблонами -->
+            <Grid Grid.Row="0" Margin="10" Height="480">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MinWidth="400" Width="Auto" />
+                    <ColumnDefinition MinWidth="400" Width="Auto" />
+                </Grid.ColumnDefinitions>
 
 
-            <!-- Кнопка Запустить -->
-            <Button Grid.Column="1" Content="Запустить"
-                    Click="RunBtn" Width="120" Height="40"
-                    FontWeight="Bold" Background="LightGreen" Margin="5" />
+                <Grid Grid.Column="0" Margin="10" Height="450">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <!-- Секция шаблона -->
+                    <Grid Grid.Row="0" Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Content="Выбранный шаблон" FontWeight="Bold" FontSize="14" />
+                        <Label Grid.Row="1" Height="50" Name="TemplateFileLabel" BorderBrush="Black"
+                               BorderThickness="2" />
+                        <Button Grid.Row="2" Height="30" Click="SelectTemplateBtn" HorizontalAlignment="Right"
+                                Content="Выбрать файл шаблона" Width="180" Margin="10"
+                                Background="LightBlue" />
+                        <Button Grid.Row="2" Height="30" HorizontalAlignment="Left"
+                                Content="Очистить" Width="80" Click="TemplateClear_OnClick"
+                                Background="Bisque" />
+                    </Grid>
+
+                    <!-- Секция файлов графиков -->
+                    <Grid Grid.Row="1" Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Content="Файлы графиков" FontWeight="Bold" FontSize="14" />
+                        <Label Grid.Row="1" Height="50" Name="ScheduleFileLabel" BorderBrush="Black"
+                               BorderThickness="2" />
+                        <Button Grid.Row="2" Height="30" Click="SelectScheduleBtn" HorizontalAlignment="Right"
+                                Content="Выбрать файлы графиков" Width="180" Margin="10"
+                                Background="LightBlue" />
+                        <Button Grid.Row="2" Height="30" HorizontalAlignment="Left"
+                                Content="Очистить" Width="80" Click="ScheduleClear_OnClick"
+                                Background="Bisque" />
+                    </Grid>
+
+                    <!-- Секция файлов аттестации -->
+                    <Grid Grid.Row="2" Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Content="Файлы аттестации" FontWeight="Bold" FontSize="14" />
+                        <Label Grid.Row="1" Name="StatementFileLabel" BorderBrush="Black" Height="50"
+                               BorderThickness="2" />
+                        <Button Grid.Row="2" Height="30" Click="SelectAttestationBtn" HorizontalAlignment="Right"
+                                Content="Выбрать файлы аттестации" Width="180" Margin="10"
+                                Background="LightBlue" />
+                        <Button Grid.Row="2" Height="30" HorizontalAlignment="Left"
+                                Content="Очистить" Width="80" Click="StatementClear_OnClick"
+                                Background="Bisque" />
+                    </Grid>
+                </Grid>
+
+                <!-- Выходные файлы -->
+                <Grid Grid.Column="1" Grid.Row="0" Margin="5" Height="450">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="100"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+
+                        <Label Grid.Row="0" Content="Выходные файлы"
+                               FontWeight="Bold" FontSize="14"
+                               HorizontalAlignment="Center" />
+
+                        <ListView Grid.Row="1" Name="OutputFilesView" Height="300"
+                                  BorderBrush="Black" VerticalAlignment="Stretch">
+                            <ListView.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Преобразовать в pdf" Click="ConvertToPdf" />
+                                    <MenuItem Header="Открыть в pdf" Click="OpenPdf_OnClick" />
+                                </ContextMenu>
+                            </ListView.ContextMenu>
+                        </ListView>
+                    </Grid>
+
+                    <StackPanel Grid.Row="1" MinHeight="100" Margin="5">
+                        <ProgressBar Name="PdfProgressBar" Height="20" Margin="5" Minimum="0"
+                                     Maximum="100" Value="0" Foreground="YellowGreen" Visibility="Collapsed"
+                                     Background="LightGray" Orientation="Horizontal" />
+                        <Label Name="PdfStatusLabel" Content="" HorizontalAlignment="Right"
+                               VerticalAlignment="Bottom" FontSize="12" FontWeight="Bold" Foreground="DarkGreen"
+                               Margin="5" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+
+
+            <!-- Нижняя панель -->
+            <Grid Grid.Row="1" VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="700" />
+                    <ColumnDefinition Width="150" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+
+
+                <!-- Прогресс-бар -->
+                <ProgressBar Grid.Column="0" Name="ProgressBarParse" Height="30" Width="700"
+                             Minimum="0" Maximum="100" Value="0" Visibility="Collapsed"
+                             HorizontalContentAlignment="Right"
+                             Foreground="YellowGreen" Background="LightGray" />
+
+                <Label Grid.Column="0" Name="ParseStatusLabel" Content="" Width="700"
+                       HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="30"
+                       HorizontalContentAlignment="Right"
+                       FontSize="12" FontWeight="Bold" Foreground="DarkGreen" />
+
+
+                <!-- Кнопка Запустить -->
+                <Button Grid.Column="1" Content="Запустить"
+                        Click="RunBtn" Width="120" Height="40"
+                        FontWeight="Bold" Background="LightGreen" Margin="5" />
+            </Grid>
         </Grid>
+
     </Grid>
+
 </Window>

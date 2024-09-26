@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -13,6 +14,9 @@ using UnpassNotifierDesktop.Classes;
 using UnpassNotifierDesktop.Classes.Extenstions;
 using UnpassNotifierDesktop.Classes.Models;
 
+using System.Collections.ObjectModel;
+using System.Reflection;
+using System.Windows;
 
 namespace UnpassNotifierDesktop;
 
@@ -21,6 +25,8 @@ namespace UnpassNotifierDesktop;
 /// </summary>
 public partial class MainWindow : Window
 {
+    public ObservableCollection<MyMenuItem> _windows = new ObservableCollection<MyMenuItem>();
+
     private string ResultsDirectory { get; }
     private string ResourcesDirectory { get; }
     private bool IsRunning { get; set; }
@@ -44,6 +50,20 @@ public partial class MainWindow : Window
         ScheduleFileLabel.MouseDoubleClick += OpenOnMouseDoubleClick;
         TemplateFileLabel.MouseDoubleClick += OpenOnMouseDoubleClick;
         OutputFilesView.MouseDoubleClick += OpenOnMouseDoubleClick;
+        
+        
+        string ver = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        MyMenuItem versionMenuItem = new MyMenuItem { Title = "Version " + ver };
+
+        Windows.Add(versionMenuItem);
+    }
+    
+    
+    
+    public ObservableCollection<MyMenuItem> Windows
+    {
+        get { return _windows; }
+        set { _windows = value; }
     }
 
     #region InteractionEvents
@@ -353,5 +373,9 @@ public partial class MainWindow : Window
         {
             Console.WriteLine("Не удалось открыть файл");
         }
+    }
+    public class MyMenuItem
+    {
+        public string Title { get; set; }
     }
 }

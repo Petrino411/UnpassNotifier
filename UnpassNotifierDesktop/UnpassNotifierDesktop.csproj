@@ -7,12 +7,23 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <UseWPF>true</UseWPF>
         <LangVersion>latestmajor</LangVersion>
+        <PackageIcon>icon.png</PackageIcon>
+        <ApplicationIcon>icon.ico</ApplicationIcon>
+        <AssemblyVersion>2.0</AssemblyVersion>
+        <NeutralLanguage>ru</NeutralLanguage>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="DocX" Version="1.6.0" />
       <PackageReference Include="EPPlus" Version="4.5.3.3" />
       <PackageReference Include="FreeSpire.Doc" Version="12.2.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="icon.png">
+        <Pack>True</Pack>
+        <PackagePath></PackagePath>
+      </None>
     </ItemGroup>
 
 </Project>
