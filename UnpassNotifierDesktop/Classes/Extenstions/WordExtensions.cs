@@ -78,6 +78,7 @@ public static class WordExtensions
     public static void WordGenerate(List<NotifyItem> notifyItems, string outputDirectory, string templatePath,
         ObservableCollection<WordFilePathModel> outputFiles, ListView outputFilesView, Queue<Task> tasks)
     {
+        var curTime = DateTime.Now;
         Directory.CreateDirectory(outputDirectory + @"\Word");
         Directory.CreateDirectory(outputDirectory + @"\PDF");
 
@@ -91,6 +92,7 @@ public static class WordExtensions
                 // Подстановка данных в документ
                 document.ReplaceText("{{ФИО}}", notifyItem.FIO);
                 document.ReplaceText("{{дата}}", DateTime.Now.ToShortDateString());
+                document.ReplaceText("{{дата1}}", $"{curTime:«dd» MMMM yyyy г.}");
 
                 var table = document.Tables.First();
                 table.RemoveRow(1);
@@ -106,7 +108,7 @@ public static class WordExtensions
                     table.Rows[row].Cells[0].Paragraphs[0]
                         .Append($"{row}.", smallFontFormat);
                     table.Rows[row].Cells[1].Paragraphs[0]
-                        .Append($"{notifyItem.UnpassedList[row - 1].Discipline.DisciplineName}", smallFontFormat);
+                        .Append($"{notifyItem.UnpassedList[row - 1].Discipline}", smallFontFormat);
                     table.Rows[row].Cells[2].Paragraphs[0]
                         .Append($"{notifyItem.UnpassedList[row - 1].Discipline.TypeControl}", smallFontFormat);
                     table.Rows[row].Cells[3].Paragraphs[0]

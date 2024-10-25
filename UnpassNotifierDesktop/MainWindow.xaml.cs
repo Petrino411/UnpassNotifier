@@ -1,21 +1,14 @@
-﻿using System.Collections;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Threading;
 using Microsoft.Win32;
 using OfficeOpenXml;
-using UnpassNotifierDesktop.Classes;
 using UnpassNotifierDesktop.Classes.Extenstions;
 using UnpassNotifierDesktop.Classes.Models;
-using System.Collections.ObjectModel;
-using System.Reflection;
-using System.Windows;
 
 namespace UnpassNotifierDesktop;
 
@@ -29,8 +22,10 @@ public partial class MainWindow : Window
     private string ResultsDirectory { get; }
     private string ResourcesDirectory { get; }
     private bool IsRunning { get; set; }
+
     private FilePathModel? TemplateFile { get; set; }
-    private FilePathModel? ScheduleFile { get; set; }
+
+    // private FilePathModel? ScheduleFile { get; set; }
     private FilePathModel? StatementFile { get; set; }
     private ObservableCollection<WordFilePathModel> OutputFiles { get; set; } = [];
 
@@ -46,13 +41,13 @@ public partial class MainWindow : Window
 
         OutputFilesView.ItemsSource = OutputFiles;
         StatementFileLabel.MouseDoubleClick += OpenOnMouseDoubleClick;
-        ScheduleFileLabel.MouseDoubleClick += OpenOnMouseDoubleClick;
+        // ScheduleFileLabel.MouseDoubleClick += OpenOnMouseDoubleClick;
         TemplateFileLabel.MouseDoubleClick += OpenOnMouseDoubleClick;
         OutputFilesView.MouseDoubleClick += OpenOnMouseDoubleClick;
 
 
-        string ver = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-        MyMenuItem versionMenuItem = new MyMenuItem { Title = "Version " + ver };
+        var ver = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
+        var versionMenuItem = new MyMenuItem { Title = "Version " + ver };
 
         Windows.Add(versionMenuItem);
     }
@@ -60,8 +55,8 @@ public partial class MainWindow : Window
 
     public ObservableCollection<MyMenuItem> Windows
     {
-        get { return _windows; }
-        set { _windows = value; }
+        get => _windows;
+        set => _windows = value;
     }
 
     #region InteractionEvents
@@ -114,24 +109,23 @@ public partial class MainWindow : Window
 
     #endregion
 
-    private async Task<bool> WorkBody(FilePathModel scheduleFile, ExcelPackage excelPackage, ProgressBar progressBar)
+    private async Task<bool> WorkBody(ExcelPackage excelPackage, ProgressBar progressBar)
     {
         try
         {
-            var disciplines = await WordExtensions.DisciplinesAttestationFill(scheduleFile.FilePath);
-            if (disciplines == null) return false;
+            // var disciplines = await WordExtensions.DisciplinesAttestationFill(scheduleFile.FilePath);
+            // if (disciplines == null) return false;
             try
             {
                 var tasks = new Queue<Task>();
 
-                await foreach (var (items, groupName) in ExcelExtensions.ExcelParse(excelPackage, disciplines))
+                await foreach (var (items, groupName) in ExcelExtensions.ExcelParse(excelPackage))
                 {
                     var targetFile = $@"{groupName} - {DateTime.Now.ToShortDateString()}";
                     var outputDirectory = Directory.CreateDirectory(ResultsDirectory + @$"\{targetFile}").FullName;
 
                     Console.WriteLine($"Создание Word уведомлений для {groupName}");
-                    WordExtensions.WordGenerate(items, outputDirectory,
-                        TemplateFile!.FilePath, OutputFiles,
+                    WordExtensions.WordGenerate(items, outputDirectory, TemplateFile!.FilePath, OutputFiles,
                         OutputFilesView, tasks);
                     progressBar.Dispatcher.InvokeAsync(() => { progressBar.Value++; });
                 }
@@ -148,27 +142,27 @@ public partial class MainWindow : Window
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Произошла ошибка при извлечении периодов из {scheduleFile.FilePath}: {e.Message}");
+            Console.WriteLine($"Произошла ошибка при обработке: {e.Message}");
             return false;
         }
     }
 
     #region Buttons
 
-    private void SelectScheduleBtn(object sender, RoutedEventArgs e)
-    {
-        var fileDialog = new OpenFileDialog
-        {
-            Multiselect = true,
-            Filter = "Графики аттестации|*.docx|All Files|*.*",
-            Title = "Выберите файлы"
-        };
-
-        if (fileDialog.ShowDialog() != true) return;
-
-        ScheduleFile = new FilePathModel(fileDialog.FileName);
-        ScheduleFileLabel.Content = ScheduleFile;
-    }
+    // private void SelectScheduleBtn(object sender, RoutedEventArgs e)
+    // {
+    //     var fileDialog = new OpenFileDialog
+    //     {
+    //         Multiselect = true,
+    //         Filter = "Графики аттестации|*.docx|All Files|*.*",
+    //         Title = "Выберите файлы"
+    //     };
+    //
+    //     if (fileDialog.ShowDialog() != true) return;
+    //
+    //     ScheduleFile = new FilePathModel(fileDialog.FileName);
+    //     ScheduleFileLabel.Content = ScheduleFile;
+    // }
 
     private void SelectAttestationBtn(object sender, RoutedEventArgs e)
     {
@@ -214,8 +208,7 @@ public partial class MainWindow : Window
         // Проверка на выполнение задачи и корректность путей
         if (IsRunning
             || TemplateFile == null
-            || StatementFile == null
-            || ScheduleFile == null)
+            || StatementFile == null)
         {
             MessageBox.Show("Какой-то из файлов не выбран или другая задача уже запущена");
             return;
@@ -234,7 +227,7 @@ public partial class MainWindow : Window
         ProgressBarParse.Visibility = Visibility.Visible;
 
         Console.WriteLine("Начата обработка");
-        tasks.Enqueue(Task.Run(async () => { await WorkBody(ScheduleFile, package, ProgressBarParse); }));
+        tasks.Enqueue(Task.Run(async () => { await WorkBody(package, ProgressBarParse); }));
 
         await Task.WhenAll(tasks);
 
@@ -321,17 +314,17 @@ public partial class MainWindow : Window
         TemplateFileLabel.Content = "";
     }
 
-    private void ScheduleClear_OnClick(object sender, RoutedEventArgs e)
-    {
-        if (IsRunning)
-        {
-            MessageBox.Show("В данный момент изменение невозможно");
-            return;
-        }
-
-        ScheduleFile = null;
-        ScheduleFileLabel.Content = "";
-    }
+    // private void ScheduleClear_OnClick(object sender, RoutedEventArgs e)
+    // {
+    //     if (IsRunning)
+    //     {
+    //         MessageBox.Show("В данный момент изменение невозможно");
+    //         return;
+    //     }
+    //
+    //     ScheduleFile = null;
+    //     ScheduleFileLabel.Content = "";
+    // }
 
     private void StatementClear_OnClick(object sender, RoutedEventArgs e)
     {

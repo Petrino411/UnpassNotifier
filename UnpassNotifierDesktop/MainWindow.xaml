@@ -65,22 +65,22 @@
                     </Grid>
 
                     <!-- Секция файлов графиков -->
-                    <Grid Grid.Row="1" Margin="10">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                        </Grid.RowDefinitions>
-                        <Label Grid.Row="0" Content="Файлы графиков" FontWeight="Bold" FontSize="14" />
-                        <Label Grid.Row="1" Height="50" Name="ScheduleFileLabel" BorderBrush="Black"
-                               BorderThickness="2" />
-                        <Button Grid.Row="2" Height="30" Click="SelectScheduleBtn" HorizontalAlignment="Right"
-                                Content="Выбрать файлы графиков" Width="180" Margin="10"
-                                Background="LightBlue" />
-                        <Button Grid.Row="2" Height="30" HorizontalAlignment="Left"
-                                Content="Очистить" Width="80" Click="ScheduleClear_OnClick"
-                                Background="Bisque" />
-                    </Grid>
+                    <!-- <Grid Grid.Row="1" Margin="10"> -->
+                    <!--     <Grid.RowDefinitions> -->
+                    <!--         <RowDefinition Height="Auto"></RowDefinition> -->
+                    <!--         <RowDefinition Height="Auto"></RowDefinition> -->
+                    <!--         <RowDefinition Height="Auto"></RowDefinition> -->
+                    <!--     </Grid.RowDefinitions> -->
+                    <!--     <Label Grid.Row="0" Content="Файлы графиков" FontWeight="Bold" FontSize="14" /> -->
+                    <!--     <Label Grid.Row="1" Height="50" Name="ScheduleFileLabel" BorderBrush="Black" -->
+                    <!--            BorderThickness="2" /> -->
+                    <!--     <Button Grid.Row="2" Height="30" Click="SelectScheduleBtn" HorizontalAlignment="Right" -->
+                    <!--             Content="Выбрать файлы графиков" Width="180" Margin="10" -->
+                    <!--             Background="LightBlue" /> -->
+                    <!--     <Button Grid.Row="2" Height="30" HorizontalAlignment="Left" -->
+                    <!--             Content="Очистить" Width="80" Click="ScheduleClear_OnClick" -->
+                    <!--             Background="Bisque" /> -->
+                    <!-- </Grid> -->
 
                     <!-- Секция файлов аттестации -->
                     <Grid Grid.Row="2" Margin="10">

@@ -5,33 +5,29 @@ namespace UnpassNotifierDesktop.Classes.Extenstions;
 
 public static class ExcelExtensions
 {
-    public static async IAsyncEnumerable<(List<NotifyItem> items, string groupName)> ExcelParse(ExcelPackage package, HashSet<Discipline> disciplines)
+    public static async IAsyncEnumerable<(List<NotifyItem> items, string groupName)> ExcelParse(ExcelPackage package)
     {
         foreach (var worksheet in package.Workbook.Worksheets)
         {
             var notifyItems = new List<NotifyItem>();
-            for (var row = 13; !string.IsNullOrEmpty(worksheet.Cells[row, 1].Text); row++)
+            for (var row = 2; !string.IsNullOrEmpty(worksheet.Cells[row, 1].Text); row++)
             {
                 var fio = worksheet.Cells[row, 2].Text.Trim();
-                for (var col = 6; worksheet.Cells[row, col].Value != null; col++)
+                for (var col = 3; worksheet.Cells[row, col].Value != null; col++)
                 {
-                    var discipline = disciplines.FirstOrDefault(x => x.DisciplineName.Contains(
-                            worksheet.Cells[10, col].Text.Trim(),
-                            StringComparison.CurrentCultureIgnoreCase
-                        )
-                    );
-                    if (discipline == null)
+                    var discipline = worksheet.Cells[1, col].Text?.Trim();
+                    if (string.IsNullOrEmpty(discipline) == null)
                     {
                         throw new AggregateException(
-                            $"Дисциплина |'{worksheet.Cells[10, col].Text}'|. Ошибка в поиске в discipline.");
+                            $"Дисциплина |'{worksheet.Cells[10, col].Text}'|. Ошибка в строке...");
                     }
 
                     var controlResult = worksheet.Cells[row, col].Text;
 
                     // Проверяем оценку (если оценка ниже 3 или неявка)
                     if (int.TryParse(controlResult, out var grade) && grade < 3
-                        || controlResult.Equals("неявка", StringComparison.CurrentCultureIgnoreCase)
-                        || controlResult.Equals("незачтено", StringComparison.CurrentCultureIgnoreCase))
+                        || controlResult.Contains("неявка", StringComparison.CurrentCultureIgnoreCase)
+                        || controlResult.Contains("незачтено", StringComparison.CurrentCultureIgnoreCase))
                     {
                         // Ищем существующий объект NotifyItem для этого студента
                         var notifyItem = notifyItems.Find(item => item.FIO == fio);
@@ -45,7 +41,7 @@ public static class ExcelExtensions
                         // Добавляем информацию о незданной дисциплине
                         notifyItem.UnpassedList.Add(new UnpassItem
                         {
-                            Discipline = discipline,
+                            Discipline = new Discipline(discipline),
                             ControlResult = controlResult == "2" ? "2 (неудовлетворительно)" : controlResult,
                         });
                     }
