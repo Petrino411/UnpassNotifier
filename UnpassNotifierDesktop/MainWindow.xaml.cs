@@ -124,7 +124,6 @@ public partial class MainWindow : Window
                     var targetFile = $@"{groupName} - {DateTime.Now.ToShortDateString()}";
                     var outputDirectory = Directory.CreateDirectory(ResultsDirectory + @$"\{targetFile}").FullName;
 
-                    Console.WriteLine($"Создание Word уведомлений для {groupName}");
                     WordExtensions.WordGenerate(items, outputDirectory, TemplateFile!.FilePath, OutputFiles,
                         OutputFilesView, tasks);
                     progressBar.Dispatcher.InvokeAsync(() => { progressBar.Value++; });
@@ -217,15 +216,19 @@ public partial class MainWindow : Window
         IsRunning = true;
         OutputFiles.Clear();
 
+        PdfStatusLabel.Content = string.Empty;
+
+
         using var package = new ExcelPackage(StatementFile.GetFileInfo());
 
         var tasks = new Queue<Task>();
 
         ProgressBarParse.Value = 0;
         ProgressBarParse.Maximum = package.Workbook.Worksheets.Count;
-        ParseStatusLabel.Content = "";
+        ParseStatusLabel.Content = string.Empty;
         ProgressBarParse.Visibility = Visibility.Visible;
 
+        Console.Clear();
         Console.WriteLine("Начата обработка");
         tasks.Enqueue(Task.Run(async () => { await WorkBody(package, ProgressBarParse); }));
 

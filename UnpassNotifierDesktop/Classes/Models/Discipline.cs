@@ -5,7 +5,7 @@ public class Discipline
     public string DisciplineName { get; set; }
     public string? AttestationDate { get; set; }
 
-    public string TypeControl => DisciplineName.Contains("зачтено") ? "Зачёт" : "Зачёт с оценкой/Экзамен";
+    public string? TypeControl { get; set; }
 
     public Discipline()
     {
@@ -16,14 +16,20 @@ public class Discipline
         DisciplineName = disciplineName;
     }
 
+    public Discipline(string disciplineName, string typeControl)
+    {
+        DisciplineName = disciplineName;
+        TypeControl = typeControl;
+    }
+
     public Discipline(string disciplineName, string attestationDate, string typeControl)
     {
         DisciplineName = disciplineName;
         AttestationDate = attestationDate;
-        // TypeControl = typeControl;
+        TypeControl = typeControl;
     }
-    
-    
+
+
     public override string ToString()
     {
         return DisciplineName;

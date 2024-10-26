@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Drawing;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -7,7 +8,9 @@ using Spire.Doc;
 using UnpassNotifierDesktop.Classes.Models;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
+using Border = Xceed.Document.NET.Border;
 using Document = Spire.Doc.Document;
+using Font = Xceed.Document.NET.Font;
 
 namespace UnpassNotifierDesktop.Classes.Extenstions;
 
@@ -15,50 +18,50 @@ public static class WordExtensions
 {
     #region Reader
 
-    public static async Task<HashSet<Discipline>?> DisciplinesAttestationFill(string? filePath)
-    {
-        if (filePath is null)
-            return null;
-        try
-        {
-            using var document = DocX.Load(filePath);
-            var table = document?.Tables.FirstOrDefault();
-            if (table == null)
-                return null;
-
-            var rows = table.Rows;
-            rows.RemoveAt(0);
-            if (rows.Count == 0)
-                return null;
-
-            var disciplines = new HashSet<Discipline>();
-            for (var row = 1; row <= rows.Count; row++)
-            {
-                var disciplineName = table.Rows[row].Cells[1].Paragraphs.First().Text;
-                var typeControl = table.Rows[row].Cells[2].Paragraphs.First().Text;
-                var attestationDate = table.Rows[row].Cells[3].Paragraphs.First().Text;
-
-                if (string.IsNullOrWhiteSpace(typeControl))
-                {
-                    var tryRow = row - 1;
-                    while (string.IsNullOrWhiteSpace(typeControl))
-                    {
-                        typeControl = table.Rows[tryRow].Cells[2].Paragraphs.First().Text;
-                        tryRow -= 1;
-                    }
-                }
-
-                disciplines.Add(new Discipline(disciplineName.Trim(), attestationDate.Trim(), typeControl.Trim()));
-            }
-
-            return disciplines;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return null;
-        }
-    }
+    // public static async Task<HashSet<Discipline>?> DisciplinesAttestationFill(string? filePath)
+    // {
+    //     if (filePath is null)
+    //         return null;
+    //     try
+    //     {
+    //         using var document = DocX.Load(filePath);
+    //         var table = document?.Tables.FirstOrDefault();
+    //         if (table == null)
+    //             return null;
+    //
+    //         var rows = table.Rows;
+    //         rows.RemoveAt(0);
+    //         if (rows.Count == 0)
+    //             return null;
+    //
+    //         var disciplines = new HashSet<Discipline>();
+    //         for (var row = 1; row <= rows.Count; row++)
+    //         {
+    //             var disciplineName = table.Rows[row].Cells[1].Paragraphs.First().Text;
+    //             var typeControl = table.Rows[row].Cells[2].Paragraphs.First().Text;
+    //             var attestationDate = table.Rows[row].Cells[3].Paragraphs.First().Text;
+    //
+    //             if (string.IsNullOrWhiteSpace(typeControl))
+    //             {
+    //                 var tryRow = row - 1;
+    //                 while (string.IsNullOrWhiteSpace(typeControl))
+    //                 {
+    //                     typeControl = table.Rows[tryRow].Cells[2].Paragraphs.First().Text;
+    //                     tryRow -= 1;
+    //                 }
+    //             }
+    //
+    //             disciplines.Add(new Discipline(disciplineName.Trim(), attestationDate.Trim(), typeControl.Trim()));
+    //         }
+    //
+    //         return disciplines;
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         Console.WriteLine(e);
+    //         return null;
+    //     }
+    // }
 
     #endregion
 
@@ -67,8 +70,9 @@ public static class WordExtensions
         var document = DocX.Load(templatePath);
         var isSuccess = document.Text.Contains("{{ФИО}}")
                         && document.Text.Contains("{{дата}}")
-                        && document.Tables.FirstOrDefault() != null
-                        && document.Tables.First().Rows.Count == 2;
+                        && document.Tables.FirstOrDefault(
+                            x => x.ColumnCount == 5 && x.RowCount > 0
+                        ) != null;
         document.Dispose();
         return isSuccess;
     }
@@ -81,57 +85,69 @@ public static class WordExtensions
         var curTime = DateTime.Now;
         Directory.CreateDirectory(outputDirectory + @"\Word");
         Directory.CreateDirectory(outputDirectory + @"\PDF");
-
-        foreach (var notifyItem in notifyItems)
+        tasks.Enqueue(Task.Run(() =>
         {
-            tasks.Enqueue(Task.Run(() =>
+            foreach (var notifyItem in notifyItems)
             {
                 var currentWordPath = outputDirectory + @$"\Word\{notifyItem.FIO}.docx";
                 using var document = DocX.Load(templatePath);
 
                 // Подстановка данных в документ
                 document.ReplaceText("{{ФИО}}", notifyItem.FIO);
-                document.ReplaceText("{{дата}}", DateTime.Now.ToShortDateString());
-                document.ReplaceText("{{дата1}}", $"{curTime:«dd» MMMM yyyy г.}");
+                document.ReplaceText("{{дата}}", curTime.ToShortDateString());
 
-                var table = document.Tables.First();
-                table.RemoveRow(1);
+                var table = document.Tables.First(x => x.ColumnCount == 5);
+                if (table.RowCount > 1)
+                {
+                    for (var row = table.RowCount - 1; row != 0; row--)
+                        table.RemoveRow(row);
+                }
 
                 var smallFontFormat = new Formatting
                 {
-                    Size = 11
+                    Size = 11,
+                    FontFamily = new Font("Times New Roman"),
                 };
 
-                for (var row = 1; row <= notifyItem.UnpassedList.Count; row++)
+                foreach (var item in notifyItem.UnpassedList)
                 {
-                    table.InsertRow();
-                    table.Rows[row].Cells[0].Paragraphs[0]
-                        .Append($"{row}.", smallFontFormat);
-                    table.Rows[row].Cells[1].Paragraphs[0]
-                        .Append($"{notifyItem.UnpassedList[row - 1].Discipline}", smallFontFormat);
-                    table.Rows[row].Cells[2].Paragraphs[0]
-                        .Append($"{notifyItem.UnpassedList[row - 1].Discipline.TypeControl}", smallFontFormat);
-                    table.Rows[row].Cells[3].Paragraphs[0]
-                        .Append($"{notifyItem.UnpassedList[row - 1].Discipline.AttestationDate}", smallFontFormat);
-                    table.Rows[row].Cells[4].Paragraphs[0]
-                        .Append($"{notifyItem.UnpassedList[row - 1].ControlResult}", smallFontFormat);
+                    var curRow = table.InsertRow();
+                    curRow.Cells[0].Paragraphs[0]
+                        .Append($"{notifyItem.UnpassedList.IndexOf(item) + 1}.", smallFontFormat);
+                    curRow.Cells[1].Paragraphs[0]
+                        .Append($"{item.Discipline}", smallFontFormat);
+                    curRow.Cells[2].Paragraphs[0]
+                        .Append($"{item.Discipline.TypeControl}", smallFontFormat);
+                    curRow.Cells[3].Paragraphs[0]
+                        .Append($"{item.Discipline.AttestationDate}", smallFontFormat);
+                    curRow.Cells[4].Paragraphs[0]
+                        .Append($"{item.ControlResult}", smallFontFormat);
                 }
 
 
-                Console.WriteLine($"Завершение создания {currentWordPath}");
+                table.SetBorder(TableBorderType.InsideH,
+                    new Border(BorderStyle.Tcbs_single, BorderSize.one, 1, Color.Black));
+                table.SetBorder(TableBorderType.Bottom,
+                    new Border(BorderStyle.Tcbs_single, BorderSize.one, 1, Color.Black));
+                table.SetBorder(TableBorderType.Left,
+                    new Border(BorderStyle.Tcbs_single, BorderSize.one, 1, Color.Black));
+                table.SetBorder(TableBorderType.Right,
+                    new Border(BorderStyle.Tcbs_single, BorderSize.one, 1, Color.Black));
+                table.SetBorder(TableBorderType.Top,
+                    new Border(BorderStyle.Tcbs_single, BorderSize.one, 1, Color.Black));
+                table.SetBorder(TableBorderType.InsideV,
+                    new Border(BorderStyle.Tcbs_single, BorderSize.one, 1, Color.Black));
+
                 document.SaveAs(currentWordPath);
 
-                outputFilesView.Dispatcher.Invoke(() =>
+                outputFilesView.Dispatcher.InvokeAsync(() =>
                 {
                     outputFiles.Add(new WordFilePathModel(currentWordPath));
                     outputFilesView.Items.Refresh();
                 });
-            }));
-        }
-        
+            }
+        }));
     }
-
-    #endregion
 
     public static bool ConvertDocxToPdf(string inputFile, string outputFile)
     {
@@ -150,4 +166,6 @@ public static class WordExtensions
             return false;
         }
     }
+
+    #endregion
 }
