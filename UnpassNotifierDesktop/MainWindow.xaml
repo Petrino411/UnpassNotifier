@@ -17,8 +17,8 @@
             <MenuItem Header="Меню">
                 <MenuItem.ItemsSource>
                     <CompositeCollection>
-                        <MenuItem Header="О программе" />
-                        <MenuItem Header="Помощь" />
+                        <MenuItem Header="О программе" Click="OpenAbout"/>
+                        <MenuItem Header="Помощь" Click="OpenHelp"/>
                     </CompositeCollection>
                 </MenuItem.ItemsSource>
             </MenuItem>
@@ -130,9 +130,21 @@
                     </Grid>
 
                     <StackPanel Grid.Row="1" MinHeight="100" Margin="5">
-                        <ProgressBar Name="PdfProgressBar" Height="20" Margin="5" Minimum="0"
-                                     Maximum="100" Value="0" Foreground="YellowGreen" Visibility="Collapsed"
-                                     Background="LightGray" Orientation="Horizontal" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="330"></ColumnDefinition>
+                                <ColumnDefinition Width="50" ></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            
+                            <ProgressBar Grid.Column="0" Name="PdfProgressBar" Height="20" Width="320" Margin="5"
+                                         Foreground="YellowGreen" HorizontalAlignment="Left" Visibility="Collapsed"
+                                         Background="LightGray" Orientation="Horizontal" />
+                            <Label Grid.Column="1" Name="PdfPercentLabel" Content="" Width="45"  HorizontalAlignment="Right"
+                                   VerticalAlignment="Bottom" FontSize="12" FontWeight="Bold" Foreground="DarkGreen"
+                                   Margin="3" />
+                            
+                        </Grid>
+                        
                         <Label Name="PdfStatusLabel" Content="" HorizontalAlignment="Right"
                                VerticalAlignment="Bottom" FontSize="12" FontWeight="Bold" Foreground="DarkGreen"
                                Margin="5" />
@@ -152,12 +164,27 @@
                 </Grid.RowDefinitions>
 
 
-                <!-- Прогресс-бар -->
-                <ProgressBar Grid.Column="0" Name="ProgressBarParse" Height="30" Width="700"
-                             Minimum="0" Maximum="100" Value="0" Visibility="Collapsed"
-                             HorizontalContentAlignment="Right"
-                             Foreground="YellowGreen" Background="LightGray" />
-
+                <Grid Width="700">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="660"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <!-- Прогресс-бар -->
+                    <ProgressBar Grid.Column="0" Grid.Row="0" Name="ProgressBarParse"  Height="30" Width="660"
+                                 Minimum="0" Maximum="100" Value="0" Visibility="Collapsed"
+                                 HorizontalContentAlignment="Right"
+                                 Foreground="YellowGreen" Background="LightGray" />
+                
+                    <!-- Проценты -->
+                    <Label Name="PercentLabel" Grid.Column="1" Grid.Row="0" 
+                           Visibility="Collapsed" Margin="5" Width="35" 
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           FontSize="12" FontWeight="Bold" Foreground="DarkGreen">
+                    </Label>
+                </Grid>
+                
+                
                 <Label Grid.Column="0" Name="ParseStatusLabel" Content="" Width="700"
                        HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="30"
                        HorizontalContentAlignment="Right"

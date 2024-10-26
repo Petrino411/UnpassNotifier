@@ -109,7 +109,7 @@ public partial class MainWindow : Window
 
     #endregion
 
-    private async Task<bool> WorkBody(ExcelPackage excelPackage, ProgressBar progressBar)
+    private async Task<bool> WorkBody(ExcelPackage excelPackage, ProgressBar progressBar, Label percentsLabel)
     {
         try
         {
@@ -127,6 +127,11 @@ public partial class MainWindow : Window
                     WordExtensions.WordGenerate(items, outputDirectory, TemplateFile!.FilePath, OutputFiles,
                         OutputFilesView, tasks);
                     progressBar.Dispatcher.InvokeAsync(() => { progressBar.Value++; });
+                    percentsLabel.Dispatcher.InvokeAsync(() =>
+                    {
+                        var progress = progressBar.Value / progressBar.Maximum * 100;
+                        percentsLabel.Content = $"{progress:0.##}%";
+                    });
                 }
 
                 await Task.WhenAll(tasks);
@@ -227,15 +232,17 @@ public partial class MainWindow : Window
         ProgressBarParse.Maximum = package.Workbook.Worksheets.Count;
         ParseStatusLabel.Content = string.Empty;
         ProgressBarParse.Visibility = Visibility.Visible;
+        PercentLabel.Visibility = Visibility.Visible;
 
         Console.Clear();
         Console.WriteLine("Начата обработка");
-        tasks.Enqueue(Task.Run(async () => { await WorkBody(package, ProgressBarParse); }));
+        tasks.Enqueue(Task.Run(async () => { await WorkBody(package, ProgressBarParse, PercentLabel); }));
 
         await Task.WhenAll(tasks);
-
-        ParseStatusLabel.Content = "Создание файлов завершено!";
+        
         ProgressBarParse.Visibility = Visibility.Collapsed;
+        PercentLabel.Visibility = Visibility.Collapsed;
+        ParseStatusLabel.Content = "Создание файлов завершено!";
         ProgressBarParse.Value = 0;
 
         Console.WriteLine("Обработка завершена");
@@ -282,11 +289,15 @@ public partial class MainWindow : Window
                     Dispatcher.Invoke(() =>
                     {
                         PdfProgressBar.Value++;
+                        var progress = PdfProgressBar.Value / PdfProgressBar.Maximum * 100;
+                        PdfPercentLabel.Content = $"{progress:0.#}%";
                         OutputFilesView.Items.Refresh();
                     });
                 }
             }
 
+            PdfPercentLabel.Dispatcher.InvokeAsync(() => { PdfPercentLabel.Content = ""; });
+         
             Console.WriteLine("Элементы преобразованы в pdf.");
         });
 
@@ -374,5 +385,17 @@ public partial class MainWindow : Window
     public class MyMenuItem
     {
         public string Title { get; set; }
+    }
+
+    private void OpenAbout(object sender, RoutedEventArgs e)
+    {
+        var aboutWin = new AboutWindow();
+        aboutWin.Show();
+    }
+
+    private void OpenHelp(object sender, RoutedEventArgs e)
+    {
+        var helpWin = new HelpWindow();
+        helpWin.Show();
     }
 }
